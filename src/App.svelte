@@ -2,7 +2,7 @@
   import type { State, Ctx, LogEntry } from "boardgame.io";
   import { Client } from "boardgame.io/client";
   import type { Grid } from "./game";
-  import { Neutrino, getPieceToMove } from "./game";
+  import { Neutrino, getPieceToMove, getValidMovesFrom } from "./game";
   import Cell from "./Cell.svelte";
 
   const client = Client({ game: Neutrino });
@@ -30,16 +30,17 @@
     return winner === null && pieceToMove === cells[y][x];
   }
 
-  let selected: [number, number] = null;
-  function handleClick(pos: [number, number]) {
-    if (selected) {
-      client.moves.move(selected, pos);
-      selected = null;
-    } else {
-      if (canMoveFrom(state.G.cells, pos)) {
-        selected = pos;
-      }
-    }
+  function handleMove(e: CustomEvent) {
+    client.moves.move(e.detail.from, e.detail.to);
+  }
+
+  let validMoveTargets = [];
+  function handleMoveStart(e: CustomEvent) {
+    validMoveTargets = getValidMovesFrom(state.G.cells, e.detail.from);
+  }
+
+  function handleMoveEnd() {
+    validMoveTargets = [];
   }
 
   const fives = [0, 1, 2, 3, 4];
@@ -53,9 +54,14 @@
           {#each fives as x}
             <Cell
               piece={state.G.cells[y][x]}
-              selected={selected && selected[0] == x && selected[1] == y}
               movable={canMoveFrom(state.G.cells, [x, y])}
-              on:click={() => handleClick([x, y])}
+              validMoveTarget={validMoveTargets.some(
+                (p) => p[0] === x && p[1] === y
+              )}
+              position={[x, y]}
+              on:move={handleMove}
+              on:moveStart={handleMoveStart}
+              on:moveEnd={handleMoveEnd}
             />
           {/each}
         </tr>

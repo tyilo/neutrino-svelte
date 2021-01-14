@@ -110,7 +110,7 @@ export function getPieceToMove(state: State, currentPlayer: string): PIECE {
   }
 }
 
-function getValidMovesFrom(cells: Grid, [x, y]: Position): Position[] {
+export function getValidMovesFrom(cells: Grid, [x, y]: Position): Position[] {
   const res = [];
   for (let dx = -1; dx < 2; dx++) {
     for (let dy = -1; dy < 2; dy++) {

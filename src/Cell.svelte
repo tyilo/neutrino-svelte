@@ -1,21 +1,93 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import interact from "interactjs";
+  import { createEventDispatcher, onMount } from "svelte";
   import { PIECE } from "./game";
 
+  export let position: [number, number];
   export let piece: PIECE;
-  export let selected: boolean;
   export let movable: boolean;
+  export let validMoveTarget: boolean;
 
   const dispatch = createEventDispatcher();
+
+  function getPosition(element: HTMLElement): [number, number] {
+    return ["x", "y"].map((k) =>
+      parseInt(element.getAttribute(`data-${k}`))
+    ) as [number, number];
+  }
+
+  let draggedOver = false;
+  let draggable = null;
+  onMount(() => {
+    let dragX = 0;
+    let dragY = 0;
+    draggable = interact(pieceElement).draggable({
+      origin: "parent",
+      listeners: {
+        start: (event) => {
+          event.preventDefault();
+        },
+        move: (event) => {
+          dispatch("moveStart", {
+            from: getPosition(event.target.parentNode),
+          });
+
+          dragX += event.dx;
+          dragY += event.dy;
+
+          pieceElement.style.transform = `translate(${dragX}px, ${dragY}px)`;
+        },
+        end: (event) => {
+          dispatch("moveEnd");
+          dragX = 0;
+          dragY = 0;
+          pieceElement.style.transform = null;
+        },
+      },
+    });
+
+    interact(cellElement).dropzone({
+      ondrop: (event) => {
+        dispatch("move", {
+          from: getPosition(event.relatedTarget.parentNode),
+          to: getPosition(event.target),
+        });
+        draggedOver = false;
+      },
+      ondragenter: (event) => {
+        draggedOver = true;
+      },
+      ondragleave: (event) => {
+        draggedOver = false;
+      },
+    });
+  });
+
+  let cellElement: HTMLTableDataCellElement;
+  let pieceElement: HTMLDivElement;
+
+  $: {
+    if (draggable) {
+      draggable.draggable(movable);
+    }
+  }
 </script>
 
-<td on:click={() => dispatch("click")} class:selected class:movable>
+<td
+  bind:this={cellElement}
+  class:movable
+  class:validMoveTarget
+  class:draggedOver
+  data-x={position[0]}
+  data-y={position[1]}>
   <div
+    bind:this={pieceElement}
     class:piece={piece !== PIECE.None}
     class:white={piece === PIECE.White}
     class:black={piece === PIECE.Black}
     class:neutrino={piece === PIECE.Neutrino}
   />
+  <div class="moveTarget" />
 </td>
 
 <style>
@@ -32,6 +104,7 @@
     border-radius: 100%;
     border: 2px #777 solid;
     margin: auto;
+    touch-action: none;
   }
 
   .white {
@@ -50,7 +123,15 @@
     background-color: lightgreen;
   }
 
-  .selected {
-    background-color: #0c0;
+  .validMoveTarget .moveTarget {
+    width: 0;
+    height: 0;
+    border-radius: 100%;
+    border: 10px #090 solid;
+    margin: auto;
+  }
+
+  .validMoveTarget.draggedOver {
+    background-color: lightgreen;
   }
 </style>
