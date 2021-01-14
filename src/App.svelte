@@ -1,0 +1,87 @@
+<script lang="ts">
+  import type { State, Ctx, LogEntry } from "boardgame.io";
+  import { Client } from "boardgame.io/client";
+  import type { Grid } from "./game";
+  import { Neutrino, getPieceToMove } from "./game";
+  import Cell from "./Cell.svelte";
+
+  const client = Client({ game: Neutrino });
+  client.start();
+
+  let state: State<any, Ctx> & {
+    isActive: boolean;
+    isConnected: boolean;
+    log: LogEntry[];
+  };
+
+  let pieceToMove = null;
+  let winner = null;
+  client.subscribe((newState) => {
+    state = newState;
+    pieceToMove = getPieceToMove(state.G, state.ctx.currentPlayer);
+    if (state.ctx.gameover) {
+      winner = state.ctx.gameover.winner;
+    } else {
+      winner = null;
+    }
+  });
+
+  function canMoveFrom(cells: Grid, [x, y]: [number, number]) {
+    return winner === null && pieceToMove === cells[y][x];
+  }
+
+  let selected: [number, number] = null;
+  function handleClick(pos: [number, number]) {
+    if (selected) {
+      client.moves.move(selected, pos);
+      selected = null;
+    } else {
+      if (canMoveFrom(state.G.cells, pos)) {
+        selected = pos;
+      }
+    }
+  }
+
+  const fives = [0, 1, 2, 3, 4];
+</script>
+
+<main>
+  {#if state}
+    <table>
+      {#each fives as y}
+        <tr>
+          {#each fives as x}
+            <Cell
+              piece={state.G.cells[y][x]}
+              selected={selected && selected[0] == x && selected[1] == y}
+              movable={canMoveFrom(state.G.cells, [x, y])}
+              on:click={() => handleClick([x, y])}
+            />
+          {/each}
+        </tr>
+      {/each}
+    </table>
+    {#if winner}
+      <div>Winner: {winner}</div>
+    {/if}
+  {/if}
+</main>
+
+<style>
+  main {
+    text-align: center;
+    padding: 1em;
+    margin: 0 auto;
+  }
+
+  table {
+    margin: auto;
+    border-collapse: collapse;
+  }
+
+  tr:nth-child(even) :global(td):nth-child(odd),
+  tr:nth-child(odd) :global(td):nth-child(even) {
+    background-image: linear-gradient(0deg, #ccc, #ccc);
+    background-blend-mode: multiply;
+  }
+</style>
