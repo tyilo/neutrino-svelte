@@ -91,15 +91,14 @@
 
 <style>
   td {
-    width: 100px;
-    height: 100px;
-    font-size: 2em;
+    width: min(15vmin, 100px);
+    height: min(15vmin, 100px);
     border: 1px black solid;
   }
 
   .piece {
-    width: 50px;
-    height: 50px;
+    width: 50%;
+    height: 50%;
     border-radius: 100%;
     border: 2px #777 solid;
     margin: auto;
