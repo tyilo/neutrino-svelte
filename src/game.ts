@@ -1,4 +1,4 @@
-import type { Ctx } from "boardgame.io";
+import type { State as BoardgameState, Ctx, LogEntry } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { immerable } from "immer";
 
@@ -143,7 +143,12 @@ export function getValidMovesFrom(cells: Grid, [x, y]: Position): Position[] {
   return res;
 }
 
-function getValidMoves(state: State, currentPlayer: string): any[] {
+type MoveType = {
+  move: string;
+  args: [Position, Position];
+};
+
+function getValidMoves(state: State, currentPlayer: string): MoveType[] {
   const piece = getPieceToMove(state, currentPlayer);
   const moves = [];
   for (const posFrom of getPiecePositions(state.cells, piece)) {
@@ -188,3 +193,9 @@ function getWinner(state: State, currentPlayer: string): PIECE {
 
   return null;
 }
+
+export type StateType = BoardgameState<State, Ctx> & {
+  isActive: boolean;
+  isConnected: boolean;
+  log: LogEntry[];
+};

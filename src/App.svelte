@@ -1,76 +1,140 @@
 <script lang="ts">
-  import type { State, Ctx, LogEntry } from "boardgame.io";
+  import PlayerSelect from "./PlayerSelect.svelte";
+  import Board from "./Board.svelte";
   import { Client } from "boardgame.io/client";
-  import type { Grid } from "./game";
-  import { Neutrino, getPieceToMove, getValidMovesFrom } from "./game";
-  import Cell from "./Cell.svelte";
+  import { MCTSBot } from "boardgame.io/ai";
+  import type { StateType } from "./game";
+  import { Neutrino } from "./game";
 
   const client = Client({ game: Neutrino });
+  window.client = client;
   client.start();
 
-  let state: State<any, Ctx> & {
-    isActive: boolean;
-    isConnected: boolean;
-    log: LogEntry[];
-  };
+  const debugPanel = document.querySelector(".debug-panel") as HTMLElement;
 
-  let pieceToMove = null;
-  let winner = null;
-  client.subscribe((newState) => {
-    state = newState;
-    pieceToMove = getPieceToMove(state.G, state.ctx.currentPlayer);
-    if (state.ctx.gameover) {
-      winner = state.ctx.gameover.winner;
+  function toggleDebugToolbar() {
+    if (debugPanel.style.display === "none") {
+      debugPanel.style.display = "";
     } else {
-      winner = null;
+      debugPanel.style.display = "none";
     }
+  }
+
+  toggleDebugToolbar();
+
+  let state: StateType;
+  let winner: string;
+  let currentPlayer: number;
+
+  let isHuman: [boolean, boolean] = [true, false];
+
+  let botToMove = false;
+  let botMoving = false;
+  let started = null;
+
+  const bot = new MCTSBot({
+    game: client.game,
+    enumerate: client.game.ai.enumerate,
+    iterations: 2000,
+    playoutDepth: 50,
+    iterationCallback: botIterationCallback,
   });
+  bot.setOpt("async", true);
 
-  function canMoveFrom(cells: Grid, [x, y]: [number, number]) {
-    return winner === null && pieceToMove === cells[y][x];
+  let stopCount = 0;
+  function toggleStart() {
+    started = !started;
+    if (!started) {
+      stopCount++;
+      botMoving = false;
+    }
   }
 
-  function handleMove(e: CustomEvent) {
-    client.moves.move(e.detail.from, e.detail.to);
+  function reset() {
+    stopCount++;
+    botMoving = false;
+    started = null;
+    client.reset();
   }
 
-  let validMoveTargets = [];
-  function handleMoveStart(e: CustomEvent) {
-    validMoveTargets = getValidMovesFrom(state.G.cells, e.detail.from);
+  async function botMove() {
+    let startStopCount = stopCount;
+    botMoving = true;
+
+    const result = await bot.play(state, state.ctx.currentPlayer);
+    botMoving = false;
+
+    if (stopCount !== startStopCount) {
+      return;
+    }
+
+    const action = result.action;
+    if (!action) {
+      return;
+    }
+
+    if (action.type === "MAKE_MOVE") {
+      client.moves[action.payload.type].apply(null, action.payload.args);
+    } else {
+      console.error("Got unknown action:", action);
+    }
   }
 
-  function handleMoveEnd() {
-    validMoveTargets = [];
+  let botProgress = 0;
+  function botIterationCallback({ iterationCounter, numIterations, metadata }) {
+    botProgress = iterationCounter / numIterations;
   }
 
-  const fives = [0, 1, 2, 3, 4];
+  function handleMove() {
+    if (!started) {
+      started = true;
+    }
+  }
+
+  $: botToMove = !isHuman[currentPlayer];
+
+  $: {
+    if (started && !botMoving && botToMove) {
+      botMove();
+    }
+  }
 </script>
 
 <main>
-  {#if state}
-    <table>
-      {#each fives as y}
-        <tr>
-          {#each fives as x}
-            <Cell
-              piece={state.G.cells[y][x]}
-              movable={canMoveFrom(state.G.cells, [x, y])}
-              validMoveTarget={validMoveTargets.some(
-                (p) => p[0] === x && p[1] === y
-              )}
-              position={[x, y]}
-              on:move={handleMove}
-              on:moveStart={handleMoveStart}
-              on:moveEnd={handleMoveEnd}
-            />
-          {/each}
-        </tr>
-      {/each}
-    </table>
-    {#if winner}
-      <div>Winner: {winner}</div>
-    {/if}
-  {/if}
+  <div>
+    <button type="button" on:click={reset}>Reset</button>
+    <button type="button" on:click={toggleDebugToolbar}
+      >Toggle debug toolbar</button
+    >
+    <br />
+    <button type="button" on:click={toggleStart}
+      >{#if started}Stop{:else}Start{/if}</button
+    >
+  </div>
+  <fieldset disabled={botMoving || winner !== null}>
+    <div class="player" class:currentPlayer={currentPlayer === 1}>
+      <PlayerSelect bind:isHuman={isHuman[1]} />
+    </div>
+    <Board
+      {client}
+      {isHuman}
+      bind:currentPlayer
+      bind:state
+      bind:winner
+      on:move={handleMove}
+    />
+    <div class="player" class:currentPlayer={currentPlayer === 0}>
+      <PlayerSelect bind:isHuman={isHuman[0]} />
+    </div>
+    <div>
+      Status:
+      {#if winner !== null}
+        <b>{winner === "0" ? "White" : "Black"} has won the game!</b>
+      {:else if botToMove}{#if started}Waiting for bot...<br />
+          <progress value={botProgress} />{:else}Stopped{/if}{:else}Waiting for
+        human...{/if}
+    </div>
+  </fieldset>
 </main>
 
 <style>
@@ -80,14 +144,18 @@
     margin: 0 auto;
   }
 
-  table {
-    margin: auto;
-    border-collapse: collapse;
+  fieldset {
+    border: none;
   }
 
-  tr:nth-child(even) :global(td):nth-child(odd),
-  tr:nth-child(odd) :global(td):nth-child(even) {
-    background-image: linear-gradient(0deg, #ccc, #ccc);
-    background-blend-mode: multiply;
+  .player {
+    display: inline-block;
+    margin: 1em;
+    border: 2px solid rgba(0, 0, 0, 0);
+    border-radius: 10px;
+  }
+
+  .currentPlayer {
+    border-color: green;
   }
 </style>

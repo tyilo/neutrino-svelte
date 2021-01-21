@@ -6,6 +6,7 @@
   export let position: [number, number];
   export let piece: PIECE;
   export let movable: boolean;
+  export let validMoveSource: boolean;
   export let validMoveTarget: boolean;
 
   const dispatch = createEventDispatcher();
@@ -24,9 +25,6 @@
     draggable = interact(pieceElement).draggable({
       origin: "parent",
       listeners: {
-        start: (event) => {
-          event.preventDefault();
-        },
         move: (event) => {
           dispatch("moveStart", {
             from: getPosition(event.target.parentNode),
@@ -37,7 +35,7 @@
 
           pieceElement.style.transform = `translate(${dragX}px, ${dragY}px)`;
         },
-        end: (event) => {
+        end: (_event) => {
           dispatch("moveEnd");
           dragX = 0;
           dragY = 0;
@@ -54,10 +52,10 @@
         });
         draggedOver = false;
       },
-      ondragenter: (event) => {
+      ondragenter: (_event) => {
         draggedOver = true;
       },
-      ondragleave: (event) => {
+      ondragleave: (_event) => {
         draggedOver = false;
       },
     });
@@ -68,18 +66,19 @@
 
   $: {
     if (draggable) {
-      draggable.draggable(movable);
+      draggable.draggable(validMoveSource && movable);
     }
   }
 </script>
 
 <td
   bind:this={cellElement}
-  class:movable
+  class:validMoveSource
   class:validMoveTarget
   class:draggedOver
   data-x={position[0]}
-  data-y={position[1]}>
+  data-y={position[1]}
+>
   <div
     bind:this={pieceElement}
     class:piece={piece !== PIECE.None}
@@ -119,7 +118,7 @@
     background-color: #777;
   }
 
-  .movable {
+  .validMoveSource {
     background-color: lightgreen;
   }
 
