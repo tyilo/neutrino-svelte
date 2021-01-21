@@ -81,24 +81,14 @@ export const Neutrino = {
   },
 
   endIf: (G: State, ctx: Ctx) => {
-    const playerPiece = PLAYER_PIECE.get(parseInt(ctx.currentPlayer));
-    const winnerPiece = getWinner(G, playerPiece);
+    const winnerPiece = getWinner(G, ctx.currentPlayer);
     if (winnerPiece !== null) {
       return { winner: REVERSE_PLAYER_PIECE.get(winnerPiece).toString() };
     }
   },
 
   ai: {
-    enumerate: (G: State, ctx: Ctx) => {
-      const piece = getPieceToMove(G, ctx.currentPlayer);
-      const moves = [];
-      for (const posFrom of getPiecePositions(G.cells, piece)) {
-        for (const posTo of getValidMovesFrom(G.cells, posFrom)) {
-          moves.push({ move: "move", args: [posFrom, posTo] });
-        }
-      }
-      return moves;
-    },
+    enumerate: (G: State, ctx: Ctx) => getValidMoves(G, ctx.currentPlayer),
   },
 };
 
@@ -153,6 +143,17 @@ export function getValidMovesFrom(cells: Grid, [x, y]: Position): Position[] {
   return res;
 }
 
+function getValidMoves(state: State, currentPlayer: string): any[] {
+  const piece = getPieceToMove(state, currentPlayer);
+  const moves = [];
+  for (const posFrom of getPiecePositions(state.cells, piece)) {
+    for (const posTo of getValidMovesFrom(state.cells, posFrom)) {
+      moves.push({ move: "move", args: [posFrom, posTo] });
+    }
+  }
+  return moves;
+}
+
 function getPiecePositions(cells: Grid, piece: PIECE): Position[] {
   const res = [];
   for (let y = 0; y < 5; y++) {
@@ -171,7 +172,7 @@ function getNeutrinoPosition(cells: Grid): Position {
   return pos[0];
 }
 
-function getWinner(state: State, playerPiece: PIECE): PIECE {
+function getWinner(state: State, currentPlayer: string): PIECE {
   const neutrinoPos = getNeutrinoPosition(state.cells);
 
   for (const [yHome, piece] of HOME_ROW.entries()) {
@@ -180,11 +181,9 @@ function getWinner(state: State, playerPiece: PIECE): PIECE {
     }
   }
 
-  if (!state.movedNeutrino) {
-    const neutrinoMoves = getValidMovesFrom(state.cells, neutrinoPos);
-    if (neutrinoMoves.length === 0) {
-      return OPPOSITE_PIECE.get(playerPiece);
-    }
+  const playerPiece = PLAYER_PIECE.get(parseInt(currentPlayer));
+  if (getValidMoves(state, currentPlayer).length === 0) {
+    return OPPOSITE_PIECE.get(playerPiece);
   }
 
   return null;
