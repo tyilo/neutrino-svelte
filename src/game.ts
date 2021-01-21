@@ -186,8 +186,15 @@ function getWinner(state: State, currentPlayer: string): PIECE {
     }
   }
 
-  const playerPiece = PLAYER_PIECE.get(parseInt(currentPlayer));
-  if (getValidMoves(state, currentPlayer).length === 0) {
+  // currentPlayer is the player that has just moved,
+  // not the player that should move now.
+  // nextPlayer is the player that should move now.
+  const nextPlayer = state.movedNeutrino
+    ? parseInt(currentPlayer)
+    : 1 - parseInt(currentPlayer);
+
+  const playerPiece = PLAYER_PIECE.get(nextPlayer);
+  if (getValidMoves(state, nextPlayer.toString()).length === 0) {
     return OPPOSITE_PIECE.get(playerPiece);
   }
 
