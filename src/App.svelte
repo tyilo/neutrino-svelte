@@ -12,6 +12,16 @@
 
   const debugPanel = document.querySelector(".debug-panel") as HTMLElement;
 
+  {
+    const debugPanelNav = debugPanel.querySelector("nav") as HTMLElement;
+    const firstNavButton = debugPanelNav.firstChild as HTMLElement;
+    const closeNavButton = firstNavButton.cloneNode();
+    closeNavButton.classList.remove("active");
+    closeNavButton.textContent = "🗙";
+    closeNavButton.addEventListener("click", toggleDebugToolbar);
+    debugPanelNav.insertBefore(closeNavButton, firstNavButton);
+  }
+
   function toggleDebugToolbar() {
     if (debugPanel.style.display === "none") {
       debugPanel.style.display = "";
