@@ -130,7 +130,9 @@ export function getValidMovesFrom(cells: Grid, [x, y]: Position): Position[] {
         if (ny == yHome && cells[y][x] == piece) {
           allHome = true;
           for (let xHome = 0; xHome < 5; xHome++) {
-            allHome = allHome && (cells[yHome][xHome] == piece || xHome == nx);
+            allHome =
+              allHome &&
+              (cells[yHome][xHome] == piece || (xHome == nx && ny != y));
           }
         }
       }
