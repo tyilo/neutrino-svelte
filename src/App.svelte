@@ -5,16 +5,19 @@
   import { MCTSBot } from "boardgame.io/ai";
   import type { StateType } from "./game";
   import { Neutrino } from "./game";
+  import { tick } from "svelte";
 
   const client = Client({ game: Neutrino });
   window.client = client;
   client.start();
 
-  const debugPanel = document.querySelector(".debug-panel") as HTMLElement;
-
-  {
+  function addCloseButton() {
+    const buttonText = "🗙";
+    const debugPanel = document.querySelector(".debug-panel") as HTMLElement;
     const debugPanelNav = debugPanel.querySelector("nav") as HTMLElement;
     const firstNavButton = debugPanelNav.firstChild as HTMLElement;
+    if (firstNavButton.textContent === buttonText) return;
+
     const closeNavButton = firstNavButton.cloneNode();
     closeNavButton.classList.remove("active");
     closeNavButton.textContent = "🗙";
@@ -22,12 +25,16 @@
     debugPanelNav.insertBefore(closeNavButton, firstNavButton);
   }
 
-  function toggleDebugToolbar() {
-    if (debugPanel.style.display === "none") {
-      debugPanel.style.display = "";
-    } else {
-      debugPanel.style.display = "none";
+  window.addEventListener("keypress", async (event) => {
+    if (event.key === ".") {
+      await tick();
+      addCloseButton();
     }
+  });
+
+  async function toggleDebugToolbar() {
+    const event = new KeyboardEvent("keypress", { key: "." });
+    window.dispatchEvent(event);
   }
 
   toggleDebugToolbar();
