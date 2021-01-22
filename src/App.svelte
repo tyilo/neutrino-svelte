@@ -49,11 +49,14 @@
   let botMoving = false;
   let started = null;
 
+  let botIterations = 2000;
+  let botPlayoutDepth = 50;
+
   const bot = new MCTSBot({
     game: client.game,
     enumerate: client.game.ai.enumerate,
-    iterations: 2000,
-    playoutDepth: 50,
+    iterations: botIterations,
+    playoutDepth: botPlayoutDepth,
     iterationCallback: botIterationCallback,
   });
   bot.setOpt("async", true);
@@ -115,6 +118,9 @@
       botMove();
     }
   }
+
+  $: bot.setOpt("iterations", botIterations);
+  $: bot.setOpt("playoutDepth", botPlayoutDepth);
 </script>
 
 <main>
@@ -151,6 +157,18 @@
           <progress value={botProgress} />{:else}Stopped{/if}{:else}Waiting for
         human...{/if}
     </div>
+    <div class="botOptions">
+      <label for="iterations">Iterations:</label>
+      <input
+        name="iterations"
+        type="number"
+        min="1"
+        bind:value={botIterations}
+      />
+      <br />
+      <label for="depth">Depth:</label>
+      <input type="number" min="1" bind:value={botPlayoutDepth} />
+    </div>
   </fieldset>
 </main>
 
@@ -174,5 +192,21 @@
 
   .currentPlayer {
     border-color: green;
+  }
+
+  .botOptions {
+    margin: auto;
+    margin-top: 1em;
+    width: 160px;
+    text-align: left;
+  }
+
+  .botOptions label {
+    display: inline-block;
+    width: 75px;
+  }
+
+  .botOptions input {
+    width: 75px;
   }
 </style>
