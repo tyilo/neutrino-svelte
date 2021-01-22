@@ -36,6 +36,7 @@ export class State {
 
   cells: Grid;
   movedNeutrino = false;
+  turn = PIECE.White;
 
   constructor() {
     const cells = [];
@@ -77,6 +78,9 @@ export const Neutrino = {
       G.cells[y1][x1] = PIECE.None;
 
       G.movedNeutrino = !G.movedNeutrino;
+      if (!G.movedNeutrino) {
+        G.turn = OPPOSITE_PIECE.get(G.turn);
+      }
     },
   },
 
@@ -197,6 +201,7 @@ function getWinner(state: State, currentPlayer: string): PIECE {
 
   const playerPiece = PLAYER_PIECE.get(nextPlayer);
   if (getValidMoves(state, nextPlayer.toString()).length === 0) {
+    console.assert(state.turn === playerPiece, state.turn, playerPiece);
     return OPPOSITE_PIECE.get(playerPiece);
   }
 
