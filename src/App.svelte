@@ -8,7 +8,7 @@
   import { tick } from "svelte";
 
   const client = Client({ game: Neutrino });
-  window.client = client;
+  (window as any).client = client;
   client.start();
 
   function addCloseButton() {
@@ -18,7 +18,7 @@
     const firstNavButton = debugPanelNav.firstChild as HTMLElement;
     if (firstNavButton.textContent === buttonText) return;
 
-    const closeNavButton = firstNavButton.cloneNode();
+    const closeNavButton = firstNavButton.cloneNode() as HTMLElement;
     closeNavButton.classList.remove("active");
     closeNavButton.textContent = "🗙";
     closeNavButton.addEventListener("click", toggleDebugToolbar);
@@ -102,6 +102,7 @@
 
   let botProgress = 0;
   function botIterationCallback({ iterationCounter, numIterations, metadata }) {
+    metadata; // ignore unused
     botProgress = iterationCounter / numIterations;
   }
 
