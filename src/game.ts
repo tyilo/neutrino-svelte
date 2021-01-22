@@ -150,7 +150,7 @@ type MoveType = {
   args: [Position, Position];
 };
 
-function getValidMoves(state: State, currentPlayer: string): MoveType[] {
+export function getValidMoves(state: State, currentPlayer: string): MoveType[] {
   const piece = getPieceToMove(state, currentPlayer);
   const moves = [];
   for (const posFrom of getPiecePositions(state.cells, piece)) {
@@ -179,7 +179,7 @@ function getNeutrinoPosition(cells: Grid): Position {
   return pos[0];
 }
 
-function getWinner(state: State, currentPlayer: string): PIECE {
+export function getWinner(state: State, currentPlayer: string): PIECE {
   const neutrinoPos = getNeutrinoPosition(state.cells);
 
   for (const [yHome, piece] of HOME_ROW.entries()) {
