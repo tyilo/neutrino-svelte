@@ -1,12 +1,13 @@
 import type { State as BoardgameState, Ctx, LogEntry } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { immerable } from "immer";
+import produce from "immer";
 
 export enum PIECE {
+  None,
   White,
   Black,
   Neutrino,
-  None,
 }
 
 const OPPOSITE_PIECE = new Map<PIECE, PIECE>();
@@ -44,6 +45,104 @@ export class State {
     }
     cells[2][2] = PIECE.Neutrino;
     this.cells = cells as Grid;
+  }
+}
+
+type StringGrid = [string, string, string, string, string];
+export class StateWithPlayer {
+  state: State;
+  currentPlayer: string;
+
+  constructor(state?: State, currentPlayer?: string) {
+    if (!state) {
+      state = new State();
+    }
+    if (!currentPlayer) {
+      currentPlayer = "0";
+    }
+    this.state = state;
+    this.currentPlayer = currentPlayer;
+  }
+
+  getWinner(): PIECE {
+    return getWinner(this.state, this.currentPlayer);
+  }
+
+  getValidMoves(): StateWithPlayer[] {
+    if (this.getWinner() !== null) return [];
+
+    const res = [];
+    const newPlayer = this.state.movedNeutrino
+      ? (1 - parseInt(this.currentPlayer)).toString()
+      : this.currentPlayer;
+    for (const { args } of getValidMoves(this.state, this.currentPlayer)) {
+      const newState = produce(this.state, (state) => {
+        Neutrino.moves.move(
+          state,
+          { currentPlayer: this.currentPlayer } as any,
+          args[0],
+          args[1]
+        );
+      });
+      res.push(new StateWithPlayer(newState, newPlayer));
+    }
+    return res;
+  }
+
+  serialize(): bigint {
+    let res = BigInt(0);
+    res |= BigInt(this.state.movedNeutrino) << BigInt(0);
+    res |= BigInt(parseInt(this.currentPlayer)) << BigInt(1);
+
+    for (let y = 0; y < 5; y++) {
+      for (let x = 0; x < 5; x++) {
+        let i = y * 5 + x;
+        res |= BigInt(this.state.cells[y][x] as number) << BigInt(2 * (i + 1));
+      }
+    }
+
+    return res;
+  }
+
+  static deserialize(n: bigint): StateWithPlayer {
+    const state = new State();
+    state.movedNeutrino = !!(n & BigInt(1));
+    const currentPlayer = n & BigInt(0b10) ? "1" : "0";
+
+    for (let y = 0; y < 5; y++) {
+      for (let x = 0; x < 5; x++) {
+        let i = y * 5 + x;
+        let k =
+          (n & (BigInt(0b11) << BigInt(2 * (i + 1)))) >> BigInt(2 * (i + 1));
+        state.cells[y][x] = Number(k) as PIECE;
+      }
+    }
+
+    return new StateWithPlayer(state, currentPlayer);
+  }
+
+  static PIECE_CHARS = (() => {
+    let s = new Map<string, PIECE>();
+    s.set(".", PIECE.None);
+    s.set("W", PIECE.White);
+    s.set("B", PIECE.Black);
+    s.set("N", PIECE.Neutrino);
+    return s;
+  })();
+  static fromArray(
+    currentPlayer: string,
+    movedNeutrino: boolean,
+    cells: StringGrid
+  ): StateWithPlayer {
+    const state = new StateWithPlayer();
+    state.currentPlayer = currentPlayer;
+    state.state.movedNeutrino = movedNeutrino;
+    for (let y = 0; y < 5; y++) {
+      for (let x = 0; x < 5; x++) {
+        state.state.cells[y][x] = this.PIECE_CHARS.get(cells[y][x]);
+      }
+    }
+    return state;
   }
 }
 
