@@ -229,7 +229,7 @@
       {:else if valuation === null}
         Draw
       {:else}
-        {valuation} will win with optimal play
+        <b>{valuation}</b> will win with optimal play
       {/if}
     </details>
   </div>
