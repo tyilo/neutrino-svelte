@@ -110,6 +110,7 @@
     stopCount++;
     botMoving = false;
     started = null;
+    winner = null;
     client.reset();
   }
 
