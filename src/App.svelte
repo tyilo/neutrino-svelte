@@ -45,7 +45,7 @@
   async function fetchExternalInfo(state: StateType): Promise<StateInfo> {
     const s = new StateWithPlayer(state.G, state.ctx.currentPlayer);
 
-    const url = new URL("http://localhost:3030/info");
+    const url = new URL("https://api.neutrino.tyilo.com/info");
     url.searchParams.set("id", s.serialize());
     const res = await fetch(url);
     const data = await res.json();
