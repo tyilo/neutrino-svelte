@@ -9,8 +9,9 @@
   import { Neutrino, StateWithPlayer } from "./game";
   import { tick } from "svelte";
   import { BotType } from "./bots";
+  import { Debug } from "boardgame.io/debug";
 
-  const client = Client({ game: Neutrino });
+  const client = Client({ game: Neutrino, debug: { impl: Debug } });
   (window as any).client = client;
   client.start();
 
