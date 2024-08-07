@@ -254,6 +254,7 @@
           <progress value={botProgress} />{:else}Stopped{/if}{:else}Waiting for
         human...{/if}
     </div>
+    <h3>Local bot options</h3>
     <div class="botOptions">
       <label for="iterations">Iterations:</label>
       <input
@@ -320,7 +321,7 @@
   .botOptions {
     margin: auto;
     margin-top: 1em;
-    width: 160px;
+    width: 200px;
     text-align: left;
   }
 
