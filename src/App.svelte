@@ -202,7 +202,7 @@
   $: botToMove = !isHuman[currentPlayer];
 
   $: {
-    if (started && !botMoving && botToMove) {
+    if (started && !botMoving && botToMove && winner === null) {
       botMove();
     }
   }
