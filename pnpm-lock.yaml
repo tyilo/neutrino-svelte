@@ -8,8 +8,8 @@ importers:
   .:
     dependencies:
       boardgame.io:
-        specifier: ^0.43.3
-        version: 0.43.3
+        specifier: ^0.50.2
+        version: 0.50.2
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -300,12 +300,20 @@ packages:
         integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==,
       }
 
-  "@koa/cors@2.2.3":
+  "@koa/cors@3.4.3":
     resolution:
       {
-        integrity: sha512-tCVVXa39ETsit5kGBtEWWimjLn1sDaeu8+0phgb8kT3GmBDZOykkI3ZO8nMjV2p3MGkJI4K5P+bxR8Ztq0bwsA==,
+        integrity: sha512-WPXQUaAeAMVaLTEFpoq3T2O1C+FstkjJnDQqy95Ck1UdILajsRhu6mhJ8H2f4NFPRBoCNN+qywTJfq/gGki5mw==,
       }
-    engines: { node: ">= 6.0.0" }
+    engines: { node: ">= 8.0.0" }
+
+  "@koa/router@10.1.1":
+    resolution:
+      {
+        integrity: sha512-ORNjq5z4EmQPriKbR0ER3k4Gh7YGNhWDL7JBW+8wXDrHLbWYKYSJaOJ9aN06npF5tbTxe2JBOsurpJDAvjiXKw==,
+      }
+    engines: { node: ">= 8.0.0" }
+    deprecated: "**IMPORTANT 10x+ PERFORMANCE UPGRADE**: Please upgrade to v12.0.1+ as we have fixed an issue with debuglog causing 10x slower router benchmark performance, see https://github.com/koajs/router/pull/173"
 
   "@rollup/rollup-android-arm-eabi@4.20.0":
     resolution:
@@ -435,6 +443,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  "@socket.io/component-emitter@3.1.2":
+    resolution:
+      {
+        integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==,
+      }
+
   "@sveltejs/vite-plugin-svelte-inspector@2.1.0":
     resolution:
       {
@@ -474,6 +488,12 @@ packages:
         integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==,
       }
 
+  "@types/component-emitter@1.2.14":
+    resolution:
+      {
+        integrity: sha512-lmPil1g82wwWg/qHSxMWkSKyJGQOK+ejXeMAAWyxNtVUD0/Ycj2maL63RAqpxVfdtvTfZkRnqzB0A9ft59y69g==,
+      }
+
   "@types/connect@3.4.38":
     resolution:
       {
@@ -486,10 +506,22 @@ packages:
         integrity: sha512-QVSSvno3dE0MgO76pJhmv4Qyi/j0Yk9pBp0Y7TJ2Tlj+KCgJWY6qX7nnxCOLkZ3VYRSIk1WTxCvwUSdx6CCLdg==,
       }
 
+  "@types/cookie@0.4.1":
+    resolution:
+      {
+        integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==,
+      }
+
   "@types/cookies@0.9.0":
     resolution:
       {
         integrity: sha512-40Zk8qR147RABiQ7NQnBzWzDcjKzNrntB5BAmeGCb2p/MIyOE+4BVvc17wumsUqUw00bJYqoXFHYygQnEFh4/Q==,
+      }
+
+  "@types/cors@2.8.17":
+    resolution:
+      {
+        integrity: sha512-8CGDvrBj1zgo2qE+oS3pOCyYNqCPryMWY2bGfwA0dcfopWGgxs+78df0Rs3rc9THP4JkOhLsAa+15VdpAqkcUA==,
       }
 
   "@types/estree@1.0.5":
@@ -510,10 +542,10 @@ packages:
         integrity: sha512-ejlPM315qwLpaQlQDTjPdsUFSc6ZsP4AN6AlWnogPjQ7CVi7PYF3YVz+CY3jE2pwYf7E/7HlDAN0rV2GxTG0HQ==,
       }
 
-  "@types/formidable@1.2.8":
+  "@types/formidable@2.0.6":
     resolution:
       {
-        integrity: sha512-6psvrUy5VDYb+yaPJReF1WrRsz+FBwyJutK9Twz1Efa27tm07bARNIkK2B8ZPWq80dXqpKfrxTO96xrtPp+AuA==,
+        integrity: sha512-L4HcrA05IgQyNYJj6kItuIkXrInJvsXTPC5B1i64FggWKKqSL+4hgt7asiSNva75AoLQjq29oPxFfU4GAQ6Z2w==,
       }
 
   "@types/http-assert@1.5.5":
@@ -544,6 +576,12 @@ packages:
     resolution:
       {
         integrity: sha512-7QFsywoE5URbuVnG3loe03QXuGajrnotr3gQkXcEBShORai23MePfFYdhz90FEtBBpkyIYQbVD+evKtloCgX3g==,
+      }
+
+  "@types/koa__router@8.0.11":
+    resolution:
+      {
+        integrity: sha512-WXgKWpBsbS14kzmzD9LeFapOIa678h7zvUHxDwXwSx4ETKXhXLVUAToX6jZ/U7EihM7qwyD9W/BZvB0MRu7MTQ==,
       }
 
   "@types/mime@1.3.5":
@@ -603,18 +641,6 @@ packages:
     engines: { node: ">=0.4.0" }
     hasBin: true
 
-  after@0.8.2:
-    resolution:
-      {
-        integrity: sha512-QbJ0NTQ/I9DI3uSJA4cbexiwQeRAfjPScqIbSjUDd9TOrcg6pTkdgziesOqxBMBzit8vFCTwrP27t13vFOORRA==,
-      }
-
-  any-promise@1.3.0:
-    resolution:
-      {
-        integrity: sha512-7UvmKalWRt1wgjL1RrGxoSJW/0QZFIegpeGvZG9kjp8vrRu55XTHbwnqq2GpXm9uLbcuhxm3IqX9OB4MZR1b2A==,
-      }
-
   anymatch@3.1.3:
     resolution:
       {
@@ -628,10 +654,10 @@ packages:
         integrity: sha512-b0P0sZPKtyu8HkeRAfCq0IfURZK+SuwMjY1UXGBU27wpAiTwQAIlq56IbIO+ytk/JjS1fMR14ee5WBBfKi5J6A==,
       }
 
-  arraybuffer.slice@0.0.7:
+  asap@2.0.6:
     resolution:
       {
-        integrity: sha512-wGUIVQXuehL5TCqQun8OW81jGzAWycqzFF8lFp+GOM5BXLYj3bKNsYC4daB7n6XjCqxQA/qgTJ+8ANR3acjrog==,
+        integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==,
       }
 
   axobject-query@4.1.0:
@@ -640,12 +666,6 @@ packages:
         integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==,
       }
     engines: { node: ">= 0.4" }
-
-  backo2@1.0.2:
-    resolution:
-      {
-        integrity: sha512-zj6Z6M7Eq+PBZ7PQxl5NT665MvJdAkzp0f60nAJ+sLaSCBPMwVak5ZegFbgVCzFcCJTKFoMizvM5Ld7+JrRJHA==,
-      }
 
   balanced-match@1.0.2:
     resolution:
@@ -674,16 +694,10 @@ packages:
       }
     engines: { node: ">=8" }
 
-  blob@0.0.5:
+  boardgame.io@0.50.2:
     resolution:
       {
-        integrity: sha512-gaqbzQPqOoamawKg0LGVd7SzLgXS+JH61oWprSLH+P+abTczqJbhTR8CmJ2u9/bUYNmHTGJx/UEmn6doAvvuig==,
-      }
-
-  boardgame.io@0.43.3:
-    resolution:
-      {
-        integrity: sha512-rl94D5r1bz8zpMT+YIrNZ35IW/7OcJmv+rjUobKj8i27FjCPITc/utdthFyLm0UD9lZdemHKRFaOS4DKNdhUlQ==,
+        integrity: sha512-oEcgtiDidTk2Mvweg3issGxOxMwOTTPlkHMoLexQ0LTQJXl60P3vA026SLYy313nrHM6s/vK7qE7TavMFxyC0g==,
       }
     engines: { node: ">=10.0", npm: ">=6.0" }
 
@@ -754,28 +768,10 @@ packages:
         integrity: sha512-7qJWqItLA8/VPVlKJlFXU+NBlo/qyfs39aJcuMT/2ere32ZqvF5OSxgdM5xOfJJ7O429gg2HM47y8v9P+9wrNw==,
       }
 
-  component-bind@1.0.0:
-    resolution:
-      {
-        integrity: sha512-WZveuKPeKAG9qY+FkYDeADzdHyTYdIboXS59ixDeRJL5ZhxpqUnxSOwop4FQjMsiYm3/Or8cegVbpAHNA7pHxw==,
-      }
-
-  component-emitter@1.2.1:
-    resolution:
-      {
-        integrity: sha512-jPatnhd33viNplKjqXKRkGU345p263OIWzDL2wH3LGIGp5Kojo+uXizHmOADRvhGFFTnJqX3jBAKP6vvmSDKcA==,
-      }
-
   component-emitter@1.3.1:
     resolution:
       {
         integrity: sha512-T0+barUSQRTUQASh8bx02dl+DhF54GtIDY13Y3m9oWTklKbb3Wv974meRpeZ3lp1JpLVECWWNHC4vaG2XHXouQ==,
-      }
-
-  component-inherit@0.0.3:
-    resolution:
-      {
-        integrity: sha512-w+LhYREhatpVqTESyGFg3NlP6Iu0kEKUHETY9GoZP/pQyW4mHFZuFWRUCIqVPZ36ueVLtoOEZaAqbCF2RDndaA==,
       }
 
   concat-map@0.0.1:
@@ -819,46 +815,19 @@ packages:
       }
     engines: { node: ">= 0.8" }
 
+  cors@2.8.5:
+    resolution:
+      {
+        integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==,
+      }
+    engines: { node: ">= 0.10" }
+
   css-tree@2.3.1:
     resolution:
       {
         integrity: sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw==,
       }
     engines: { node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0 }
-
-  debug@3.1.0:
-    resolution:
-      {
-        integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==,
-      }
-    peerDependencies:
-      supports-color: "*"
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
-  debug@3.2.7:
-    resolution:
-      {
-        integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==,
-      }
-    peerDependencies:
-      supports-color: "*"
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
-  debug@4.1.1:
-    resolution:
-      {
-        integrity: sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==,
-      }
-    deprecated: Debug versions >=3.2.0 <3.2.7 || >=4 <4.3.1 have a low-severity ReDos regression when used in a Node.js environment. It is recommended you upgrade to 3.2.7 or 4.3.1. (https://github.com/visionmedia/debug/issues/797)
-    peerDependencies:
-      supports-color: "*"
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
 
   debug@4.3.6:
     resolution:
@@ -933,6 +902,12 @@ packages:
       }
     engines: { node: ">=8" }
 
+  dezalgo@1.0.4:
+    resolution:
+      {
+        integrity: sha512-rXSP0bf+5n0Qonsb+SVVfNfIsimO4HEtmnIpPHY8Q1UCzKlQrDMfdobr8nJOOsRgWCyMRqeSBQzmWUMq7zvVig==,
+      }
+
   ee-first@1.1.1:
     resolution:
       {
@@ -946,24 +921,39 @@ packages:
       }
     engines: { node: ">= 0.8" }
 
-  engine.io-client@3.5.4:
+  engine.io-client@6.5.4:
     resolution:
       {
-        integrity: sha512-ydc8uuMMDxC5KCKNJN3zZKYJk2sgyTuTZQ7Aj1DJSsLKAcizA/PzWivw8fZMIjJVBo2CJOYzntv4FSjY/Lr//g==,
+        integrity: sha512-GeZeeRjpD2qf49cZQ0Wvh/8NJNfeXkXXcoGh+F77oEAgo9gUHwT1fCRxSNU+YEEaysOJTnsFHmM5oAcPy4ntvQ==,
       }
 
-  engine.io-parser@2.2.1:
+  engine.io-parser@4.0.3:
     resolution:
       {
-        integrity: sha512-x+dN/fBH8Ro8TFwJ+rkB2AmuVw9Yu2mockR/p3W8f8YtExwFgDvBDi0GWyb4ZLkpahtDGZgtr3zLovanJghPqg==,
-      }
-
-  engine.io@3.6.2:
-    resolution:
-      {
-        integrity: sha512-C4JjGQZLY3kWlIDx0BQNKizbrfpb7NahxDztGdN5jrPK2ghmXiNDN+E/t0JzDeNRZxPVaszxEng42Pmj27X/0w==,
+        integrity: sha512-xEAAY0msNnESNPc00e19y5heTPX4y/TJ36gr8t1voOaNmTojP9b3oK3BbJLFufW2XFPQaaijpFewm2g2Um3uqA==,
       }
     engines: { node: ">=8.0.0" }
+
+  engine.io-parser@5.2.3:
+    resolution:
+      {
+        integrity: sha512-HqD3yTBfnBxIrbnM1DoD6Pcq8NECnh8d4As1Qgh0z5Gg3jRRIqijury0CL3ghu/edArpUYiYqQiDUQBIs4np3Q==,
+      }
+    engines: { node: ">=10.0.0" }
+
+  engine.io@4.1.2:
+    resolution:
+      {
+        integrity: sha512-t5z6zjXuVLhXDMiFJPYsPOWEER8B0tIsD3ETgw19S1yg9zryvUfY3Vhtk3Gf4sihw/bQGIqQ//gjvVlu+Ca0bQ==,
+      }
+    engines: { node: ">=10.0.0" }
+
+  engine.io@6.5.5:
+    resolution:
+      {
+        integrity: sha512-C5Pn8Wk+1vKBoHghJODM63yk8MvrO9EWZUfkAt5HAqIgPE4/8FF0PEGHXtEd40l223+cE5ABWuPzm38PHFXfMA==,
+      }
+    engines: { node: ">=10.2.0" }
 
   es-define-property@1.0.0:
     resolution:
@@ -1018,18 +1008,17 @@ packages:
       }
     engines: { node: ">=8" }
 
-  flatted@0.2.3:
+  flatted@3.3.1:
     resolution:
       {
-        integrity: sha512-C4B5UtK3kOrLAyZ1ftqEWprxCfLmCIqEcNufZrtsJhiZ/fcI5mvCgtAtC3pu7BC9KE7aUIrPXwTgcT1fiI7QhA==,
+        integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==,
       }
 
-  formidable@1.2.6:
+  formidable@2.1.2:
     resolution:
       {
-        integrity: sha512-KcpbcpuLNOwrEjnbpMC0gS+X8ciDoZE1kkqzat4a8vrprf+s9pKNQ/QIwWfbfs4ltgmFl3MD177SNTkve3BwGQ==,
+        integrity: sha512-CM3GuJ57US06mlpQ47YcunuUZ9jpm8Vx+P2CGt2j7HpgkKZO/DJYQ0Bobim8G6PFQmK5lOqOOdUXboU+h73A4g==,
       }
-    deprecated: "Please upgrade to latest, formidable@v2 or formidable@v3! Check these notes: https://bit.ly/2ZEqIau"
 
   fresh@0.5.2:
     resolution:
@@ -1091,18 +1080,6 @@ packages:
         integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==,
       }
 
-  has-binary2@1.0.3:
-    resolution:
-      {
-        integrity: sha512-G1LWKhDSvhGeAQ8mPVQlqNcOB2sJdwATtZKl2pDKKHfpf/rYj24lkinxf69blJbnsvtqqNU+L3SL50vzZhXOnw==,
-      }
-
-  has-cors@1.1.0:
-    resolution:
-      {
-        integrity: sha512-g5VNKdkFuUuVCP9gYfDJHjK2nqdQJ7aDLTnycnc2+RvsOQbuLdF5pm7vuE5J76SEBIQjs4kQY/BWq74JUmjbXA==,
-      }
-
   has-property-descriptors@1.0.2:
     resolution:
       {
@@ -1136,6 +1113,13 @@ packages:
         integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==,
       }
     engines: { node: ">= 0.4" }
+
+  hexoid@1.0.0:
+    resolution:
+      {
+        integrity: sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==,
+      }
+    engines: { node: ">=8" }
 
   http-assert@1.5.0:
     resolution:
@@ -1171,22 +1155,16 @@ packages:
         integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==,
       }
 
-  immer@8.0.4:
+  immer@9.0.21:
     resolution:
       {
-        integrity: sha512-jMfL18P+/6P6epANRvRk6q8t+3gGhqsJ9EuJ25AXE+9bNTYtssvzeYbEd0mXRYWCmmXSIbnlpz6vd6iJlmGGGQ==,
+        integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==,
       }
 
   immutable@4.3.7:
     resolution:
       {
         integrity: sha512-1hqclzwYwjRDFLjcFxOM5AYkkG0rpFPpr1RLPMEuGczoS7YA8gLhy8SWXYRAA/XwfEHpfo3cw5JGioS32fnMRw==,
-      }
-
-  indexof@0.0.1:
-    resolution:
-      {
-        integrity: sha512-i0G7hLJ1z0DE8dsqJa2rycj9dBmNKgXBvotXtZYXakU9oivfB9Uj2ZBC27qqef2U58/ZLwalxa1X/RDCdkHtVg==,
       }
 
   inflation@2.1.0:
@@ -1256,18 +1234,6 @@ packages:
         integrity: sha512-v3rht/LgVcsdZa3O2Nqs+NMowLOxeOm7Ay9+/ARQ2F+qEoANRcqrjAZKGN0v8ymUetZGgkp26LTnGT7H0Qo9Pg==,
       }
 
-  isarray@0.0.1:
-    resolution:
-      {
-        integrity: sha512-D2S+3GLxWH+uhrNEcoh/fnmYeP8E8/zHl644d/jdA0g2uyXvy3sb0qxotE+ne0LtccHknQzWwZEzhak7oJ0COQ==,
-      }
-
-  isarray@2.0.1:
-    resolution:
-      {
-        integrity: sha512-c2cu3UxbI+b6kR3fy0nRnAhodsvR9dx7U5+znCOzdj6IfP3upFURTr0Xl5BlQZNKZjEtxrmVyfSdeE3O57smoQ==,
-      }
-
   js-tokens@4.0.0:
     resolution:
       {
@@ -1288,16 +1254,10 @@ packages:
       }
     engines: { node: ">=6" }
 
-  koa-body@4.2.0:
+  koa-body@5.0.0:
     resolution:
       {
-        integrity: sha512-wdGu7b9amk4Fnk/ytH8GuWwfs4fsB5iNkY8kZPpgQVb04QZSv85T0M8reb+cJmvLE8cjPYvBzRikD3s6qz8OoA==,
-      }
-
-  koa-compose@3.2.1:
-    resolution:
-      {
-        integrity: sha512-8gen2cvKHIZ35eDEik5WOo8zbVp9t4cP8p4hW4uE55waxolLRexKKrqfCpwhGVppnB40jWeF8bZeTVg99eZgPw==,
+        integrity: sha512-nHwEODrQGiyKBILCWO8QSS40C87cKr2cp3y/Cw8u9Z8w5t0CdSkGm3+y9WK5BIAlPpo9tTw5RtSbxpVyG79vmw==,
       }
 
   koa-compose@4.1.0:
@@ -1313,18 +1273,10 @@ packages:
       }
     engines: { node: ">= 10" }
 
-  koa-router@7.4.0:
+  koa-socket-2@2.0.0:
     resolution:
       {
-        integrity: sha512-IWhaDXeAnfDBEpWS6hkGdZ1ablgr6Q6pGdXCyK38RbzuH4LkUOpPqPw+3f8l8aTDrQmBQ7xJc0bs2yV4dzcO+g==,
-      }
-    engines: { node: ">= 4" }
-    deprecated: "**IMPORTANT 10x+ PERFORMANCE UPGRADE**: Please upgrade to v12.0.1+ as we have fixed an issue with debuglog causing 10x slower router benchmark performance, see https://github.com/koajs/router/pull/173"
-
-  koa-socket-2@1.2.0:
-    resolution:
-      {
-        integrity: sha512-uv0MImrccpT3p9mpBtM+Jw4syBJ+EhkARI62ERvyXVQKJNdRW5OFwqRrb/DkxXAj6W/8tfGYb9rEwvkmp1efbg==,
+        integrity: sha512-YSy9nYtd4/CR9bChAeL9/3lb17ietphRFgNTAwOkhrCOHFZuOPv+dMORK3sxSJygiIqH5ugJyc2/4Ek1Hc5eVA==,
       }
     engines: { node: ">= 4" }
 
@@ -1427,12 +1379,6 @@ packages:
       }
     engines: { node: ">=4" }
 
-  ms@2.0.0:
-    resolution:
-      {
-        integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==,
-      }
-
   ms@2.1.2:
     resolution:
       {
@@ -1515,18 +1461,6 @@ packages:
       }
     engines: { node: ">=8" }
 
-  parseqs@0.0.6:
-    resolution:
-      {
-        integrity: sha512-jeAGzMDbfSHHA091hr0r31eYfTig+29g3GKKE/PPbEQ65X0lmMwlEoqmhzu0iztID5uJpZsFlUPDP8ThPL7M8w==,
-      }
-
-  parseuri@0.0.6:
-    resolution:
-      {
-        integrity: sha512-AUjen8sAkGgao7UyCX6Ahv0gIK2fABKmYjvP4xmy5JaKvcbTRueIqIPHLAfq30xJddqSE033IOMUSOMCcK3Sow==,
-      }
-
   parseurl@1.3.3:
     resolution:
       {
@@ -1541,10 +1475,10 @@ packages:
       }
     engines: { node: ">=0.10.0" }
 
-  path-to-regexp@1.8.0:
+  path-to-regexp@6.2.2:
     resolution:
       {
-        integrity: sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==,
+        integrity: sha512-GQX3SSMokngb36+whdpRXE+3f9V8UzyAorlYvOGx87ufGHehNTn5lCxrKtLyZ4Yl/wEKnNnr98ZzOwwDZV5ogw==,
       }
 
   periscopic@3.1.0:
@@ -1624,6 +1558,12 @@ packages:
         integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==,
       }
 
+  rfc6902@5.1.1:
+    resolution:
+      {
+        integrity: sha512-8rKImbe8GTXJ7cl9v+sF3U0WQ9aaSBn4fEcGP1VJakWN335ufj75ctvWXEhrzecGRxXpY6pEFbcdWzesjV7bFg==,
+      }
+
   rimraf@2.7.1:
     resolution:
       {
@@ -1680,6 +1620,12 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
+  setimmediate@1.0.5:
+    resolution:
+      {
+        integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==,
+      }
+
   setprototypeof@1.2.0:
     resolution:
       {
@@ -1693,36 +1639,52 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
-  socket.io-adapter@1.1.2:
+  socket.io-adapter@2.1.0:
     resolution:
       {
-        integrity: sha512-WzZRUj1kUjrTIrUKpZLEzFZ1OLj5FwLlAFQs9kuZJzJi5DKdU7FsWc36SNmA8iDOtwBQyT8FkrriRM8vXLYz8g==,
+        integrity: sha512-+vDov/aTsLjViYTwS9fPy5pEtTkrbEKsw2M+oVSoFGw6OD1IpvlV1VPhUzNbofCQ8oyMbdYJqDtGdmHQK6TdPg==,
       }
 
-  socket.io-client@2.5.0:
+  socket.io-adapter@2.5.5:
     resolution:
       {
-        integrity: sha512-lOO9clmdgssDykiOmVQQitwBAF3I6mYcQAo7hQ7AM6Ny5X7fp8hIJ3HcQs3Rjz4SoggoxA1OgrQyY8EgTbcPYw==,
+        integrity: sha512-eLDQas5dzPgOWCk9GuuJC2lBqItuhKI4uxGgo9aIV7MYbk2h9Q6uULEh8WBzThoI7l+qU9Ast9fVUmkqPP9wYg==,
       }
 
-  socket.io-parser@3.3.4:
+  socket.io-client@4.7.5:
     resolution:
       {
-        integrity: sha512-z/pFQB3x+EZldRRzORYW1vwVO8m/3ILkswtnpoeU6Ve3cbMWkmHEWDAVJn4QJtchiiFTo5j7UG2QvwxvaA9vow==,
-      }
-
-  socket.io-parser@3.4.3:
-    resolution:
-      {
-        integrity: sha512-1rE4dZN3kCI/E5wixd393hmbqa78vVpkKmnEJhLeWoS/C5hbFYAbcSfnWoaVH43u9ToUVtzKjguxEZq+1XZfCQ==,
+        integrity: sha512-sJ/tqHOCe7Z50JCBCXrsY3I2k03iOiUe+tj1OmKeD2lXPiGH/RUCdTZFoqVyN7l1MnpIzPrGtLcijffmeouNlQ==,
       }
     engines: { node: ">=10.0.0" }
 
-  socket.io@2.5.1:
+  socket.io-parser@4.0.5:
     resolution:
       {
-        integrity: sha512-eaTE4tBKRD6RFoetquMbxgvcpvoDtRyIlkIMI/SMK2bsKvbENTsDeeu4GJ/z9c90yOWxB7b/eC+yKLPbHnH6bA==,
+        integrity: sha512-sNjbT9dX63nqUFIOv95tTVm6elyIU4RvB1m8dOeZt+IgWwcWklFDOdmGcfo3zSiRsnR/3pJkjY5lfoGqEe4Eig==,
       }
+    engines: { node: ">=10.0.0" }
+
+  socket.io-parser@4.2.4:
+    resolution:
+      {
+        integrity: sha512-/GbIKmo8ioc+NIWIhwdecY0ge+qVBSMdgxGygevmdHj24bsfgtCmcUUcQ5ZzcylGFHsN3k4HB4Cgkl96KVnuew==,
+      }
+    engines: { node: ">=10.0.0" }
+
+  socket.io@3.1.2:
+    resolution:
+      {
+        integrity: sha512-JubKZnTQ4Z8G4IZWtaAZSiRP3I/inpy8c/Bsx2jrwGrTbKeVU5xd6qkKMHpChYeM3dWZSO0QACiGK+obhBNwYw==,
+      }
+    engines: { node: ">=10.0.0" }
+
+  socket.io@4.7.5:
+    resolution:
+      {
+        integrity: sha512-DmeAkF6cwM9jSfmp6Dr/5/mfMwb5Z5qRrSXLpo3Fq5SqyU8CMF15jIN4ZhfSwu35ksM1qmHZDQ/DK5XTccSTvA==,
+      }
+    engines: { node: ">=10.2.0" }
 
   sorcery@0.11.1:
     resolution:
@@ -1837,12 +1799,6 @@ packages:
       }
     engines: { node: ">=16" }
 
-  to-array@0.1.4:
-    resolution:
-      {
-        integrity: sha512-LhVdShQD/4Mk4zXNroIQZJC+Ap3zgLcDuwEdcmLv9CCO73NWockQDwyUnW/m8VX/EElfL6FcYx7EeutN4HJA6A==,
-      }
-
   to-regex-range@5.0.1:
     resolution:
       {
@@ -1904,12 +1860,6 @@ packages:
       }
     engines: { node: ">= 0.8" }
 
-  urijs@1.19.11:
-    resolution:
-      {
-        integrity: sha512-HXgFDgDommxn5/bIv0cnQZsPhHDA90NPHD6+c/v21U5+Sx5hoP8+dP9IZXBU1gIfvdRfhG8cel9QNPeionfcCQ==,
-      }
-
   vary@1.1.2:
     resolution:
       {
@@ -1968,10 +1918,10 @@ packages:
         integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==,
       }
 
-  ws@7.5.10:
+  ws@7.4.6:
     resolution:
       {
-        integrity: sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==,
+        integrity: sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==,
       }
     engines: { node: ">=8.3.0" }
     peerDependencies:
@@ -1983,18 +1933,27 @@ packages:
       utf-8-validate:
         optional: true
 
-  xmlhttprequest-ssl@1.6.3:
+  ws@8.17.1:
     resolution:
       {
-        integrity: sha512-3XfeQE/wNkvrIktn2Kf0869fC0BN6UpydVasGIeSm2B1Llihf7/0UfZM+eCkOw3P7bP4+qPgqhm7ZoxuJtFU0Q==,
+        integrity: sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==,
+      }
+    engines: { node: ">=10.0.0" }
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ">=5.0.2"
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
+  xmlhttprequest-ssl@2.0.0:
+    resolution:
+      {
+        integrity: sha512-QKxVRxiRACQcVuQEYFsI1hhkrMlrXHPegbbd1yn9UHOmRxY+si12nQYzri3vbzt8VdTTRviqcKxcyllFas5z2A==,
       }
     engines: { node: ">=0.4.0" }
-
-  yeast@0.1.2:
-    resolution:
-      {
-        integrity: sha512-8HFIh676uyGYP6wP13R/j6OJ/1HwJ46snpvzE7aHAN3Ryqh2yX6Xox2B4CUmTwwOIzlG3Bs7ocsP5dZH/R1Qbg==,
-      }
 
   ylru@1.4.0:
     resolution:
@@ -2101,9 +2060,19 @@ snapshots:
       "@jridgewell/resolve-uri": 3.1.2
       "@jridgewell/sourcemap-codec": 1.5.0
 
-  "@koa/cors@2.2.3":
+  "@koa/cors@3.4.3":
     dependencies:
       vary: 1.1.2
+
+  "@koa/router@10.1.1":
+    dependencies:
+      debug: 4.3.6
+      http-errors: 1.8.1
+      koa-compose: 4.1.0
+      methods: 1.1.2
+      path-to-regexp: 6.2.2
+    transitivePeerDependencies:
+      - supports-color
 
   "@rollup/rollup-android-arm-eabi@4.20.0":
     optional: true
@@ -2153,6 +2122,8 @@ snapshots:
   "@rollup/rollup-win32-x64-msvc@4.20.0":
     optional: true
 
+  "@socket.io/component-emitter@3.1.2": {}
+
   ? "@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.4.0(@types/node@22.1.0)(sass@1.77.8)))(svelte@4.2.18)(vite@5.4.0(@types/node@22.1.0)(sass@1.77.8))"
   : dependencies:
       "@sveltejs/vite-plugin-svelte": 3.1.1(svelte@4.2.18)(vite@5.4.0(@types/node@22.1.0)(sass@1.77.8))
@@ -2187,17 +2158,25 @@ snapshots:
       "@types/connect": 3.4.38
       "@types/node": 22.1.0
 
+  "@types/component-emitter@1.2.14": {}
+
   "@types/connect@3.4.38":
     dependencies:
       "@types/node": 22.1.0
 
   "@types/content-disposition@0.5.8": {}
 
+  "@types/cookie@0.4.1": {}
+
   "@types/cookies@0.9.0":
     dependencies:
       "@types/connect": 3.4.38
       "@types/express": 4.17.21
       "@types/keygrip": 1.0.6
+      "@types/node": 22.1.0
+
+  "@types/cors@2.8.17":
+    dependencies:
       "@types/node": 22.1.0
 
   "@types/estree@1.0.5": {}
@@ -2216,7 +2195,7 @@ snapshots:
       "@types/qs": 6.9.15
       "@types/serve-static": 1.15.7
 
-  "@types/formidable@1.2.8":
+  "@types/formidable@2.0.6":
     dependencies:
       "@types/node": 22.1.0
 
@@ -2240,6 +2219,10 @@ snapshots:
       "@types/keygrip": 1.0.6
       "@types/koa-compose": 3.2.8
       "@types/node": 22.1.0
+
+  "@types/koa__router@8.0.11":
+    dependencies:
+      "@types/koa": 2.15.0
 
   "@types/mime@1.3.5": {}
 
@@ -2271,10 +2254,6 @@ snapshots:
 
   acorn@8.12.1: {}
 
-  after@0.8.2: {}
-
-  any-promise@1.3.0: {}
-
   anymatch@3.1.3:
     dependencies:
       normalize-path: 3.0.0
@@ -2284,11 +2263,9 @@ snapshots:
     dependencies:
       dequal: 2.0.3
 
-  arraybuffer.slice@0.0.7: {}
+  asap@2.0.6: {}
 
   axobject-query@4.1.0: {}
-
-  backo2@1.0.2: {}
 
   balanced-match@1.0.2: {}
 
@@ -2298,26 +2275,27 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
-  blob@0.0.5: {}
-
-  boardgame.io@0.43.3:
+  boardgame.io@0.50.2:
     dependencies:
-      "@koa/cors": 2.2.3
+      "@koa/cors": 3.4.3
+      "@koa/router": 10.1.1
       "@types/koa": 2.15.0
-      flatted: 0.2.3
-      immer: 8.0.4
+      "@types/koa__router": 8.0.11
+      flatted: 3.3.1
+      immer: 9.0.21
       koa: 2.15.3
-      koa-body: 4.2.0
-      koa-router: 7.4.0
-      koa-socket-2: 1.2.0
+      koa-body: 5.0.0
+      koa-socket-2: 2.0.0
       lodash.isplainobject: 4.0.6
       nanoid: 3.3.7
       p-queue: 6.6.2
       prop-types: 15.8.1
       react-cookies: 0.1.1
       redux: 4.2.1
-      socket.io: 2.5.1
-      socket.io-client: 2.5.0
+      rfc6902: 5.1.1
+      setimmediate: 1.0.5
+      socket.io: 4.7.5
+      socket.io-client: 4.7.5
       svelte: 3.59.2
       svelte-json-tree-auto: 0.1.0
       ts-toolbelt: 6.15.5
@@ -2381,13 +2359,7 @@ snapshots:
       estree-walker: 3.0.3
       periscopic: 3.1.0
 
-  component-bind@1.0.0: {}
-
-  component-emitter@1.2.1: {}
-
   component-emitter@1.3.1: {}
-
-  component-inherit@0.0.3: {}
 
   concat-map@0.0.1: {}
 
@@ -2406,22 +2378,15 @@ snapshots:
       depd: 2.0.0
       keygrip: 1.1.0
 
+  cors@2.8.5:
+    dependencies:
+      object-assign: 4.1.1
+      vary: 1.1.2
+
   css-tree@2.3.1:
     dependencies:
       mdn-data: 2.0.30
       source-map-js: 1.2.0
-
-  debug@3.1.0:
-    dependencies:
-      ms: 2.0.0
-
-  debug@3.2.7:
-    dependencies:
-      ms: 2.1.2
-
-  debug@4.1.1:
-    dependencies:
-      ms: 2.1.2
 
   debug@4.3.6:
     dependencies:
@@ -2449,44 +2414,59 @@ snapshots:
 
   detect-indent@6.1.0: {}
 
+  dezalgo@1.0.4:
+    dependencies:
+      asap: 2.0.6
+      wrappy: 1.0.2
+
   ee-first@1.1.1: {}
 
   encodeurl@1.0.2: {}
 
-  engine.io-client@3.5.4:
+  engine.io-client@6.5.4:
     dependencies:
-      component-emitter: 1.3.1
-      component-inherit: 0.0.3
-      debug: 3.1.0
-      engine.io-parser: 2.2.1
-      has-cors: 1.1.0
-      indexof: 0.0.1
-      parseqs: 0.0.6
-      parseuri: 0.0.6
-      ws: 7.5.10
-      xmlhttprequest-ssl: 1.6.3
-      yeast: 0.1.2
+      "@socket.io/component-emitter": 3.1.2
+      debug: 4.3.6
+      engine.io-parser: 5.2.3
+      ws: 8.17.1
+      xmlhttprequest-ssl: 2.0.0
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  engine.io-parser@2.2.1:
+  engine.io-parser@4.0.3:
     dependencies:
-      after: 0.8.2
-      arraybuffer.slice: 0.0.7
       base64-arraybuffer: 0.1.4
-      blob: 0.0.5
-      has-binary2: 1.0.3
 
-  engine.io@3.6.2:
+  engine.io-parser@5.2.3: {}
+
+  engine.io@4.1.2:
     dependencies:
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.4.2
-      debug: 4.1.1
-      engine.io-parser: 2.2.1
-      ws: 7.5.10
+      cors: 2.8.5
+      debug: 4.3.6
+      engine.io-parser: 4.0.3
+      ws: 7.4.6
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  engine.io@6.5.5:
+    dependencies:
+      "@types/cookie": 0.4.1
+      "@types/cors": 2.8.17
+      "@types/node": 22.1.0
+      accepts: 1.3.8
+      base64id: 2.0.0
+      cookie: 0.4.2
+      cors: 2.8.5
+      debug: 4.3.6
+      engine.io-parser: 5.2.3
+      ws: 8.17.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -2538,9 +2518,14 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
-  flatted@0.2.3: {}
+  flatted@3.3.1: {}
 
-  formidable@1.2.6: {}
+  formidable@2.1.2:
+    dependencies:
+      dezalgo: 1.0.4
+      hexoid: 1.0.0
+      once: 1.4.0
+      qs: 6.13.0
 
   fresh@0.5.2: {}
 
@@ -2578,12 +2563,6 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  has-binary2@1.0.3:
-    dependencies:
-      isarray: 2.0.1
-
-  has-cors@1.1.0: {}
-
   has-property-descriptors@1.0.2:
     dependencies:
       es-define-property: 1.0.0
@@ -2599,6 +2578,8 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
+
+  hexoid@1.0.0: {}
 
   http-assert@1.5.0:
     dependencies:
@@ -2627,12 +2608,10 @@ snapshots:
 
   immer@10.1.1: {}
 
-  immer@8.0.4: {}
+  immer@9.0.21: {}
 
   immutable@4.3.7:
     optional: true
-
-  indexof@0.0.1: {}
 
   inflation@2.1.0: {}
 
@@ -2667,10 +2646,6 @@ snapshots:
     dependencies:
       "@types/estree": 1.0.5
 
-  isarray@0.0.1: {}
-
-  isarray@2.0.1: {}
-
   js-tokens@4.0.0: {}
 
   keygrip@1.1.0:
@@ -2679,15 +2654,11 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  koa-body@4.2.0:
+  koa-body@5.0.0:
     dependencies:
-      "@types/formidable": 1.2.8
+      "@types/formidable": 2.0.6
       co-body: 5.2.0
-      formidable: 1.2.6
-
-  koa-compose@3.2.1:
-    dependencies:
-      any-promise: 1.3.0
+      formidable: 2.1.2
 
   koa-compose@4.1.0: {}
 
@@ -2696,21 +2667,10 @@ snapshots:
       co: 4.6.0
       koa-compose: 4.1.0
 
-  koa-router@7.4.0:
-    dependencies:
-      debug: 3.2.7
-      http-errors: 1.8.1
-      koa-compose: 3.2.1
-      methods: 1.1.2
-      path-to-regexp: 1.8.0
-      urijs: 1.19.11
-    transitivePeerDependencies:
-      - supports-color
-
-  koa-socket-2@1.2.0:
+  koa-socket-2@2.0.0:
     dependencies:
       koa-compose: 4.1.0
-      socket.io: 2.5.1
+      socket.io: 3.1.2
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -2782,8 +2742,6 @@ snapshots:
 
   mri@1.2.0: {}
 
-  ms@2.0.0: {}
-
   ms@2.1.2: {}
 
   nanoid@3.3.7: {}
@@ -2817,17 +2775,11 @@ snapshots:
     dependencies:
       p-finally: 1.0.0
 
-  parseqs@0.0.6: {}
-
-  parseuri@0.0.6: {}
-
   parseurl@1.3.3: {}
 
   path-is-absolute@1.0.1: {}
 
-  path-to-regexp@1.8.0:
-    dependencies:
-      isarray: 0.0.1
+  path-to-regexp@6.2.2: {}
 
   periscopic@3.1.0:
     dependencies:
@@ -2878,6 +2830,8 @@ snapshots:
       "@babel/runtime": 7.25.0
 
   regenerator-runtime@0.14.1: {}
+
+  rfc6902@5.1.1: {}
 
   rimraf@2.7.1:
     dependencies:
@@ -2936,6 +2890,8 @@ snapshots:
       gopd: 1.0.1
       has-property-descriptors: 1.0.2
 
+  setimmediate@1.0.5: {}
+
   setprototypeof@1.2.0: {}
 
   side-channel@1.0.6:
@@ -2945,50 +2901,68 @@ snapshots:
       get-intrinsic: 1.2.4
       object-inspect: 1.13.2
 
-  socket.io-adapter@1.1.2: {}
+  socket.io-adapter@2.1.0: {}
 
-  socket.io-client@2.5.0:
+  socket.io-adapter@2.5.5:
     dependencies:
-      backo2: 1.0.2
-      component-bind: 1.0.0
-      component-emitter: 1.3.1
-      debug: 3.1.0
-      engine.io-client: 3.5.4
-      has-binary2: 1.0.3
-      indexof: 0.0.1
-      parseqs: 0.0.6
-      parseuri: 0.0.6
-      socket.io-parser: 3.3.4
-      to-array: 0.1.4
+      debug: 4.3.6
+      ws: 8.17.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  socket.io-parser@3.3.4:
+  socket.io-client@4.7.5:
     dependencies:
+      "@socket.io/component-emitter": 3.1.2
+      debug: 4.3.6
+      engine.io-client: 6.5.4
+      socket.io-parser: 4.2.4
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  socket.io-parser@4.0.5:
+    dependencies:
+      "@types/component-emitter": 1.2.14
       component-emitter: 1.3.1
-      debug: 3.1.0
-      isarray: 2.0.1
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
-  socket.io-parser@3.4.3:
+  socket.io-parser@4.2.4:
     dependencies:
-      component-emitter: 1.2.1
-      debug: 4.1.1
-      isarray: 2.0.1
+      "@socket.io/component-emitter": 3.1.2
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
-  socket.io@2.5.1:
+  socket.io@3.1.2:
     dependencies:
-      debug: 4.1.1
-      engine.io: 3.6.2
-      has-binary2: 1.0.3
-      socket.io-adapter: 1.1.2
-      socket.io-client: 2.5.0
-      socket.io-parser: 3.4.3
+      "@types/cookie": 0.4.1
+      "@types/cors": 2.8.17
+      "@types/node": 22.1.0
+      accepts: 1.3.8
+      base64id: 2.0.0
+      debug: 4.3.6
+      engine.io: 4.1.2
+      socket.io-adapter: 2.1.0
+      socket.io-parser: 4.0.5
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  socket.io@4.7.5:
+    dependencies:
+      accepts: 1.3.8
+      base64id: 2.0.0
+      cors: 2.8.5
+      debug: 4.3.6
+      engine.io: 6.5.5
+      socket.io-adapter: 2.5.5
+      socket.io-parser: 4.2.4
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -3069,8 +3043,6 @@ snapshots:
       magic-string: 0.30.11
       periscopic: 3.1.0
 
-  to-array@0.1.4: {}
-
   to-regex-range@5.0.1:
     dependencies:
       is-number: 7.0.0
@@ -3094,8 +3066,6 @@ snapshots:
 
   unpipe@1.0.0: {}
 
-  urijs@1.19.11: {}
-
   vary@1.1.2: {}
 
   vite@5.4.0(@types/node@22.1.0)(sass@1.77.8):
@@ -3114,10 +3084,10 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  ws@7.5.10: {}
+  ws@7.4.6: {}
 
-  xmlhttprequest-ssl@1.6.3: {}
+  ws@8.17.1: {}
 
-  yeast@0.1.2: {}
+  xmlhttprequest-ssl@2.0.0: {}
 
   ylru@1.4.0: {}

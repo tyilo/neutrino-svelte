@@ -83,8 +83,7 @@ export class StateWithPlayer {
     for (const { args } of getValidMoves(this.state, this.currentPlayer)) {
       const newState = produce(this.state, (state) => {
         Neutrino.moves.move(
-          state,
-          { currentPlayer: this.currentPlayer } as any,
+          { G: state, ctx: { currentPlayer: this.currentPlayer } },
           args[0],
           args[1]
         );
@@ -136,8 +135,7 @@ export class StateWithPlayer {
     for (let move of getValidMoves(this.state, this.currentPlayer)) {
       const stateWithoutPlayer = produce(this.state, (state) => {
         Neutrino.moves.move(
-          state,
-          { currentPlayer: this.currentPlayer } as any,
+          { G: state, ctx: { currentPlayer: this.currentPlayer } },
           move.args[0],
           move.args[1]
         );
@@ -188,7 +186,11 @@ export const Neutrino = {
   },
 
   moves: {
-    move: (G: State, ctx: Ctx, [x1, y1]: Position, [x2, y2]: Position) => {
+    move: (
+      { G, ctx }: { G: State; ctx: Ctx },
+      [x1, y1]: Position,
+      [x2, y2]: Position
+    ) => {
       const expectedPiece = getPieceToMove(G, ctx.currentPlayer);
 
       if (G.cells[y1][x1] != expectedPiece) {
@@ -211,7 +213,7 @@ export const Neutrino = {
     },
   },
 
-  endIf: (G: State, ctx: Ctx) => {
+  endIf: ({ G, ctx }: { G: State; ctx: Ctx }) => {
     const winnerPiece = getWinner(G, ctx.currentPlayer);
     if (winnerPiece !== null) {
       return { winner: REVERSE_PLAYER_PIECE.get(winnerPiece).toString() };
