@@ -8,8 +8,8 @@ importers:
   .:
     dependencies:
       boardgame.io:
-        specifier: ^0.43.2
-        version: 0.43.2
+        specifier: ^0.43.3
+        version: 0.43.3
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -680,10 +680,10 @@ packages:
         integrity: sha512-gaqbzQPqOoamawKg0LGVd7SzLgXS+JH61oWprSLH+P+abTczqJbhTR8CmJ2u9/bUYNmHTGJx/UEmn6doAvvuig==,
       }
 
-  boardgame.io@0.43.2:
+  boardgame.io@0.43.3:
     resolution:
       {
-        integrity: sha512-jNZK/80KzdO3BlEICaIaS6k0MteaMLmRrQa7LRufxAWWTdMDOczzBnwjfkf16pYOCPxsUCkAcGPnYoy7WhUg2Q==,
+        integrity: sha512-rl94D5r1bz8zpMT+YIrNZ35IW/7OcJmv+rjUobKj8i27FjCPITc/utdthFyLm0UD9lZdemHKRFaOS4DKNdhUlQ==,
       }
     engines: { node: ">=10.0", npm: ">=6.0" }
 
@@ -1171,10 +1171,10 @@ packages:
         integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==,
       }
 
-  immer@7.0.15:
+  immer@8.0.4:
     resolution:
       {
-        integrity: sha512-yM7jo9+hvYgvdCQdqvhCNRRio0SCXc8xDPzA25SvKWa7b1WVPjLwQs1VYU5JPXjcJPTqAa5NP5dqpORGYBQ2AA==,
+        integrity: sha512-jMfL18P+/6P6epANRvRk6q8t+3gGhqsJ9EuJ25AXE+9bNTYtssvzeYbEd0mXRYWCmmXSIbnlpz6vd6iJlmGGGQ==,
       }
 
   immutable@4.3.7:
@@ -1339,6 +1339,12 @@ packages:
     resolution:
       {
         integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==,
+      }
+
+  lodash.isplainobject@4.0.6:
+    resolution:
+      {
+        integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==,
       }
 
   loose-envify@1.4.0:
@@ -2294,16 +2300,17 @@ snapshots:
 
   blob@0.0.5: {}
 
-  boardgame.io@0.43.2:
+  boardgame.io@0.43.3:
     dependencies:
       "@koa/cors": 2.2.3
       "@types/koa": 2.15.0
       flatted: 0.2.3
-      immer: 7.0.15
+      immer: 8.0.4
       koa: 2.15.3
       koa-body: 4.2.0
       koa-router: 7.4.0
       koa-socket-2: 1.2.0
+      lodash.isplainobject: 4.0.6
       nanoid: 3.3.7
       p-queue: 6.6.2
       prop-types: 15.8.1
@@ -2620,7 +2627,7 @@ snapshots:
 
   immer@10.1.1: {}
 
-  immer@7.0.15: {}
+  immer@8.0.4: {}
 
   immutable@4.3.7:
     optional: true
@@ -2738,6 +2745,8 @@ snapshots:
       - supports-color
 
   locate-character@3.0.0: {}
+
+  lodash.isplainobject@4.0.6: {}
 
   loose-envify@1.4.0:
     dependencies:

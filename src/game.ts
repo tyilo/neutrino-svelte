@@ -1,6 +1,5 @@
 import type { State as BoardgameState, Ctx, LogEntry } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { immerable } from "immer";
 import { produce } from "immer";
 
 export enum PIECE {
@@ -37,20 +36,21 @@ type MoveType = {
   args: [Position, Position];
 };
 
-export class State {
-  [immerable] = true;
-
+export type State = {
   cells: Grid;
-  movedNeutrino = false;
+  movedNeutrino: boolean;
+};
 
-  constructor() {
-    const cells = [];
-    for (let y = 0; y < 5; y++) {
-      cells.push(Array(5).fill(HOME_ROW.has(y) ? HOME_ROW.get(y) : PIECE.None));
-    }
-    cells[2][2] = PIECE.Neutrino;
-    this.cells = cells as Grid;
+function initialState(): State {
+  const cells = [];
+  for (let y = 0; y < 5; y++) {
+    cells.push(Array(5).fill(HOME_ROW.has(y) ? HOME_ROW.get(y) : PIECE.None));
   }
+  cells[2][2] = PIECE.Neutrino;
+  return {
+    cells,
+    movedNeutrino: false,
+  };
 }
 
 type StringGrid = [string, string, string, string, string];
@@ -60,7 +60,7 @@ export class StateWithPlayer {
 
   constructor(state?: State, currentPlayer?: string) {
     if (!state) {
-      state = new State();
+      state = initialState();
     }
     if (!currentPlayer) {
       currentPlayer = "0";
@@ -111,7 +111,7 @@ export class StateWithPlayer {
 
   static deserialize(str: string): StateWithPlayer {
     const n = BigInt(str);
-    const state = new State();
+    const state = initialState();
     state.movedNeutrino = !!(n & BigInt(1));
     const currentPlayer = n & BigInt(0b10) ? "1" : "0";
 
@@ -180,7 +180,7 @@ export class StateWithPlayer {
 
 export const Neutrino = {
   setup: () => {
-    return new State();
+    return initialState();
   },
 
   turn: {
