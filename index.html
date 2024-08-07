@@ -5,15 +5,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
 
     <title>Neutrino</title>
-
-    <script>
-      // WORKAROUND for immer.js esm (see https://github.com/immerjs/immer/issues/557)
-      window.process = {
-        env: {
-          NODE_ENV: "development",
-        },
-      };
-    </script>
   </head>
   <body>
     <div id="app"></div>

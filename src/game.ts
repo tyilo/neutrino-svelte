@@ -1,7 +1,7 @@
 import type { State as BoardgameState, Ctx, LogEntry } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { immerable } from "immer";
-import produce from "immer";
+import { produce } from "immer";
 
 export enum PIECE {
   None,
