@@ -11,30 +11,12 @@
   import { BotType } from "./bots";
   import { Debug } from "boardgame.io/debug";
 
-  const client = Client({ game: Neutrino, debug: { impl: Debug } });
+  const client = Client({
+    game: Neutrino,
+    debug: { impl: Debug, collapseOnLoad: true },
+  });
   (window as any).client = client;
   client.start();
-
-  function addCloseButton() {
-    const buttonText = "🗙";
-    const debugPanel = document.querySelector(".debug-panel") as HTMLElement;
-    const debugPanelNav = debugPanel.querySelector("nav") as HTMLElement;
-    const firstNavButton = debugPanelNav.firstChild as HTMLElement;
-    if (firstNavButton.textContent === buttonText) return;
-
-    const closeNavButton = firstNavButton.cloneNode() as HTMLElement;
-    closeNavButton.classList.remove("active");
-    closeNavButton.textContent = "🗙";
-    closeNavButton.addEventListener("click", toggleDebugToolbar);
-    debugPanelNav.insertBefore(closeNavButton, firstNavButton);
-  }
-
-  window.addEventListener("keypress", async (event) => {
-    if (event.key === ".") {
-      await tick();
-      addCloseButton();
-    }
-  });
 
   type StateInfo = {
     id: string;
@@ -63,13 +45,6 @@
       valuation = info.optimal_winner.replace(/^./, (c) => c.toUpperCase());
     }
   });
-
-  async function toggleDebugToolbar() {
-    const event = new KeyboardEvent("keypress", { key: "." });
-    window.dispatchEvent(event);
-  }
-
-  toggleDebugToolbar();
 
   let state: StateType;
   let winner: string;
@@ -215,9 +190,6 @@
 <main>
   <div>
     <button type="button" on:click={reset}>Reset</button>
-    <button type="button" on:click={toggleDebugToolbar}
-      >Toggle debug toolbar</button
-    >
     <br />
     <button type="button" on:click={toggleStart}
       >{#if started}Stop{:else}Start{/if}</button
