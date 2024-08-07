@@ -8,8 +8,8 @@ importers:
   .:
     dependencies:
       boardgame.io:
-        specifier: ^0.42.2
-        version: 0.42.2
+        specifier: ^0.43.2
+        version: 0.43.2
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -680,10 +680,10 @@ packages:
         integrity: sha512-gaqbzQPqOoamawKg0LGVd7SzLgXS+JH61oWprSLH+P+abTczqJbhTR8CmJ2u9/bUYNmHTGJx/UEmn6doAvvuig==,
       }
 
-  boardgame.io@0.42.2:
+  boardgame.io@0.43.2:
     resolution:
       {
-        integrity: sha512-VIsLpPyTwFjrKEhG6h6Xj6qib1bw2i7tegSEfha4jSD3YLJzGuLSW595mys8wAL6CMt5nv/KhW0enCBkmN8mog==,
+        integrity: sha512-jNZK/80KzdO3BlEICaIaS6k0MteaMLmRrQa7LRufxAWWTdMDOczzBnwjfkf16pYOCPxsUCkAcGPnYoy7WhUg2Q==,
       }
     engines: { node: ">=10.0", npm: ">=6.0" }
 
@@ -1348,12 +1348,6 @@ packages:
       }
     hasBin: true
 
-  lru-cache@4.1.5:
-    resolution:
-      {
-        integrity: sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==,
-      }
-
   magic-string@0.30.11:
     resolution:
       {
@@ -1437,18 +1431,6 @@ packages:
     resolution:
       {
         integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==,
-      }
-
-  ms@2.1.3:
-    resolution:
-      {
-        integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==,
-      }
-
-  nanoid@2.1.11:
-    resolution:
-      {
-        integrity: sha512-s/snB+WGm6uwi0WjsZdaVcuf3KJXlfGl2LcxgwkEwJF0D/BWzVWAZW/XY4bFaiR7s0Jk3FPvlnepg1H1b1UwlA==,
       }
 
   nanoid@3.3.7:
@@ -1591,12 +1573,6 @@ packages:
         integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==,
       }
 
-  pseudomap@1.0.2:
-    resolution:
-      {
-        integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==,
-      }
-
   qs@6.13.0:
     resolution:
       {
@@ -1703,13 +1679,6 @@ packages:
       {
         integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==,
       }
-
-  shortid@2.2.16:
-    resolution:
-      {
-        integrity: sha512-Ugt+GIZqvGXCIItnsL+lvFJOiN7RYqlGy7QE41O3YC1xbNSeDGIRO7xg2JJXIAj1cAGnOeC1r7/T9pgrtQbv4g==,
-      }
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   side-channel@1.0.6:
     resolution:
@@ -1935,14 +1904,6 @@ packages:
         integrity: sha512-HXgFDgDommxn5/bIv0cnQZsPhHDA90NPHD6+c/v21U5+Sx5hoP8+dP9IZXBU1gIfvdRfhG8cel9QNPeionfcCQ==,
       }
 
-  uuid@3.2.1:
-    resolution:
-      {
-        integrity: sha512-jZnMwlb9Iku/O3smGWvZhauCf6cvvpKi4BKRiliS3cxnI+Gz9j5MEpTz2UFuXiKPJocb7gnsLHwiS05ige5BEA==,
-      }
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
-    hasBin: true
-
   vary@1.1.2:
     resolution:
       {
@@ -2022,12 +1983,6 @@ packages:
         integrity: sha512-3XfeQE/wNkvrIktn2Kf0869fC0BN6UpydVasGIeSm2B1Llihf7/0UfZM+eCkOw3P7bP4+qPgqhm7ZoxuJtFU0Q==,
       }
     engines: { node: ">=0.4.0" }
-
-  yallist@2.1.2:
-    resolution:
-      {
-        integrity: sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==,
-      }
 
   yeast@0.1.2:
     resolution:
@@ -2339,7 +2294,7 @@ snapshots:
 
   blob@0.0.5: {}
 
-  boardgame.io@0.42.2:
+  boardgame.io@0.43.2:
     dependencies:
       "@koa/cors": 2.2.3
       "@types/koa": 2.15.0
@@ -2349,18 +2304,16 @@ snapshots:
       koa-body: 4.2.0
       koa-router: 7.4.0
       koa-socket-2: 1.2.0
-      lru-cache: 4.1.5
+      nanoid: 3.3.7
       p-queue: 6.6.2
       prop-types: 15.8.1
       react-cookies: 0.1.1
       redux: 4.2.1
-      shortid: 2.2.16
       socket.io: 2.5.1
       socket.io-client: 2.5.0
       svelte: 3.59.2
       svelte-json-tree-auto: 0.1.0
       ts-toolbelt: 6.15.5
-      uuid: 3.2.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -2457,11 +2410,11 @@ snapshots:
 
   debug@3.2.7:
     dependencies:
-      ms: 2.1.3
+      ms: 2.1.2
 
   debug@4.1.1:
     dependencies:
-      ms: 2.1.3
+      ms: 2.1.2
 
   debug@4.3.6:
     dependencies:
@@ -2790,11 +2743,6 @@ snapshots:
     dependencies:
       js-tokens: 4.0.0
 
-  lru-cache@4.1.5:
-    dependencies:
-      pseudomap: 1.0.2
-      yallist: 2.1.2
-
   magic-string@0.30.11:
     dependencies:
       "@jridgewell/sourcemap-codec": 1.5.0
@@ -2828,10 +2776,6 @@ snapshots:
   ms@2.0.0: {}
 
   ms@2.1.2: {}
-
-  ms@2.1.3: {}
-
-  nanoid@2.1.11: {}
 
   nanoid@3.3.7: {}
 
@@ -2897,8 +2841,6 @@ snapshots:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-
-  pseudomap@1.0.2: {}
 
   qs@6.13.0:
     dependencies:
@@ -2986,10 +2928,6 @@ snapshots:
       has-property-descriptors: 1.0.2
 
   setprototypeof@1.2.0: {}
-
-  shortid@2.2.16:
-    dependencies:
-      nanoid: 2.1.11
 
   side-channel@1.0.6:
     dependencies:
@@ -3149,8 +3087,6 @@ snapshots:
 
   urijs@1.19.11: {}
 
-  uuid@3.2.1: {}
-
   vary@1.1.2: {}
 
   vite@5.4.0(@types/node@22.1.0)(sass@1.77.8):
@@ -3172,8 +3108,6 @@ snapshots:
   ws@7.5.10: {}
 
   xmlhttprequest-ssl@1.6.3: {}
-
-  yallist@2.1.2: {}
 
   yeast@0.1.2: {}
 
