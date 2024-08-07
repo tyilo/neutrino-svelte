@@ -1,4 +1,6 @@
 <script lang="ts">
+  import "./style.css";
+
   import PlayerSelect from "./PlayerSelect.svelte";
   import Board from "./Board.svelte";
   import { Client } from "boardgame.io/client";
