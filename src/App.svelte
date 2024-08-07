@@ -33,6 +33,34 @@
     }
   });
 
+  type StateInfo = {
+    id: string;
+    index: number;
+    optimal_move_id: string | null;
+    optimal_winner: string | null;
+  };
+
+  async function fetchExternalInfo(state: StateType): Promise<StateInfo> {
+    const s = new StateWithPlayer(state.G, state.ctx.currentPlayer);
+
+    const url = new URL("http://localhost:3030/info");
+    url.searchParams.set("id", s.serialize());
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
+  }
+
+  let valuation: string | null | undefined;
+  client.subscribe(async (newState: StateType) => {
+    valuation = undefined;
+    const info = await fetchExternalInfo(newState);
+    if (info.optimal_winner === null) {
+      valuation = null;
+    } else {
+      valuation = info.optimal_winner.replace(/^./, (c) => c.toUpperCase());
+    }
+  });
+
   async function toggleDebugToolbar() {
     const event = new KeyboardEvent("keypress", { key: "." });
     window.dispatchEvent(event);
@@ -84,20 +112,10 @@
 
   async function getExternalMove() {
     const s = new StateWithPlayer(state.G, state.ctx.currentPlayer);
+    const data = await fetchExternalInfo(state);
 
-    const res = await fetch("http://localhost:3030/move", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        state: s.serialize(),
-      }),
-    });
-    const data = await res.json();
-
-    if (data.success) {
-      const newState = StateWithPlayer.deserialize(data.state);
+    if (data.optimal_move_id) {
+      const newState = StateWithPlayer.deserialize(data.optimal_move_id);
       const move = s.getMoveToState(newState);
       if (move === null) {
         console.error("Got null move:", s, newState);
@@ -201,6 +219,18 @@
       >{#if started}Stop{:else}Start{/if}</button
     >
   </div>
+  <div id="valuation">
+    <details>
+      <summary>Valuation</summary>
+      {#if valuation === undefined}
+        ???
+      {:else if valuation === null}
+        Draw
+      {:else}
+        {valuation} will win with optimal play
+      {/if}
+    </details>
+  </div>
   <fieldset disabled={botMoving || winner !== null}>
     <div class="player" class:currentPlayer={currentPlayer === 1}>
       <PlayerSelect bind:botType={botTypes[1]} />
@@ -244,6 +274,10 @@
     text-align: center;
     padding: 1em;
     margin: 0 auto;
+  }
+
+  #valuation {
+    margin-top: 2em;
   }
 
   fieldset {
