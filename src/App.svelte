@@ -221,7 +221,7 @@
   </div>
   <div id="valuation">
     <details>
-      <summary>Valuation</summary>
+      <summary>Optimal valuation</summary>
       {#if valuation === undefined}
         ???
       {:else if valuation === null}
@@ -278,6 +278,28 @@
 
   #valuation {
     margin-top: 2em;
+  }
+
+  #valuation details {
+    display: inline-block;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: 0.5em 0.5em 0;
+  }
+
+  #valuation summary {
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+  }
+
+  #valuation details[open] {
+    padding: 0.5em;
+  }
+
+  #valuation details[open] summary {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 0.5em;
   }
 
   fieldset {

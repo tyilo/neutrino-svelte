@@ -9,10 +9,11 @@
 </label>
 <label>
   <input type="radio" bind:group={botType} value={BotType.LocalBot} /> Local Bot
+  (Weak)
 </label>
 <label>
   <input type="radio" bind:group={botType} value={BotType.ExternalBot} /> External
-  Bot
+  Bot (Optimal)
 </label>
 
 <style>
