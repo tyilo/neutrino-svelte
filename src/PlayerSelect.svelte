@@ -1,29 +1,18 @@
 <script lang="ts">
-  export let isHuman = true;
+  import { BotType } from "./bots";
 
-  // We can't bind a boolean to the inputs' value
-  $: _isHuman = Number(isHuman);
-
-  function handleChange() {
-    isHuman = Boolean(_isHuman);
-  }
+  export let botType: BotType = BotType.Human;
 </script>
 
 <label>
-  <input
-    type="radio"
-    bind:group={_isHuman}
-    value={1}
-    on:change={handleChange}
-  /> Human
+  <input type="radio" bind:group={botType} value={BotType.Human} /> Human
 </label>
 <label>
-  <input
-    type="radio"
-    bind:group={_isHuman}
-    value={0}
-    on:change={handleChange}
-  /> Bot
+  <input type="radio" bind:group={botType} value={BotType.LocalBot} /> Local Bot
+</label>
+<label>
+  <input type="radio" bind:group={botType} value={BotType.ExternalBot} /> External
+  Bot
 </label>
 
 <style>

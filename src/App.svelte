@@ -4,8 +4,9 @@
   import { Client } from "boardgame.io/client";
   import { MCTSBot } from "boardgame.io/ai";
   import type { StateType } from "./game";
-  import { Neutrino } from "./game";
+  import { Neutrino, StateWithPlayer } from "./game";
   import { tick } from "svelte";
+  import { BotType } from "./bots";
 
   const client = Client({ game: Neutrino });
   (window as any).client = client;
@@ -43,7 +44,11 @@
   let winner: string;
   let currentPlayer: number;
 
-  let isHuman: [boolean, boolean] = [true, false];
+  let botTypes: [BotType, BotType] = [BotType.Human, BotType.Human];
+  $: isHuman = [
+    botTypes[0] === BotType.Human,
+    botTypes[1] === BotType.Human,
+  ] as [boolean, boolean];
 
   let botToMove = false;
   let botMoving = false;
@@ -52,14 +57,14 @@
   let botIterations = 2000;
   let botPlayoutDepth = 50;
 
-  const bot = new MCTSBot({
+  const localBot = new MCTSBot({
     game: client.game,
     enumerate: client.game.ai.enumerate,
     iterations: botIterations,
     playoutDepth: botPlayoutDepth,
     iterationCallback: botIterationCallback,
   });
-  bot.setOpt("async", true);
+  localBot.setOpt("async", true);
 
   let stopCount = 0;
   function toggleStart() {
@@ -77,11 +82,72 @@
     client.reset();
   }
 
+  async function getExternalMove() {
+    const s = new StateWithPlayer(state.G, state.ctx.currentPlayer);
+
+    const res = await fetch("http://localhost:3030/move", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        state: s.serialize(),
+      }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      const newState = StateWithPlayer.deserialize(data.state);
+      const move = s.getMoveToState(newState);
+      if (move === null) {
+        console.error("Got null move:", s, newState);
+      } else {
+        return {
+          action: {
+            type: "MAKE_MOVE",
+            payload: {
+              type: move.move,
+              args: move.args,
+            },
+          },
+        };
+      }
+    } else {
+      console.error(data);
+    }
+  }
+
+  function timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function getBotMove() {
+    const MIN_TIME = 1000;
+    const startTime = Date.now();
+
+    let botType = botTypes[currentPlayer];
+    let move;
+    if (botType === BotType.LocalBot) {
+      move = await localBot.play(state, state.ctx.currentPlayer);
+    } else if (botType === BotType.ExternalBot) {
+      move = await getExternalMove();
+    } else {
+      console.error("Unknown bot type:", botType);
+    }
+
+    const endTime = Date.now();
+    const diff = endTime - startTime;
+    const delay = Math.max(0, MIN_TIME - diff);
+    await timeout(delay);
+
+    return move;
+  }
+
   async function botMove() {
-    let startStopCount = stopCount;
+    const startStopCount = stopCount;
     botMoving = true;
 
-    const result = await bot.play(state, state.ctx.currentPlayer);
+    const result = await getBotMove();
     botMoving = false;
 
     if (stopCount !== startStopCount) {
@@ -120,8 +186,8 @@
     }
   }
 
-  $: bot.setOpt("iterations", botIterations);
-  $: bot.setOpt("playoutDepth", botPlayoutDepth);
+  $: localBot.setOpt("iterations", botIterations);
+  $: localBot.setOpt("playoutDepth", botPlayoutDepth);
 </script>
 
 <main>
@@ -137,7 +203,7 @@
   </div>
   <fieldset disabled={botMoving || winner !== null}>
     <div class="player" class:currentPlayer={currentPlayer === 1}>
-      <PlayerSelect bind:isHuman={isHuman[1]} />
+      <PlayerSelect bind:botType={botTypes[1]} />
     </div>
     <Board
       {client}
@@ -148,7 +214,7 @@
       on:move={handleMove}
     />
     <div class="player" class:currentPlayer={currentPlayer === 0}>
-      <PlayerSelect bind:isHuman={isHuman[0]} />
+      <PlayerSelect bind:botType={botTypes[0]} />
     </div>
     <div>
       Status:

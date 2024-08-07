@@ -32,6 +32,11 @@ export type Grid = [Row, Row, Row, Row, Row];
 
 export type Position = [number, number];
 
+type MoveType = {
+  move: string;
+  args: [Position, Position];
+};
+
 export class State {
   [immerable] = true;
 
@@ -89,7 +94,7 @@ export class StateWithPlayer {
     return res;
   }
 
-  serialize(): bigint {
+  serialize(): string {
     let res = BigInt(0);
     res |= BigInt(this.state.movedNeutrino) << BigInt(0);
     res |= BigInt(parseInt(this.currentPlayer)) << BigInt(1);
@@ -101,10 +106,11 @@ export class StateWithPlayer {
       }
     }
 
-    return res;
+    return res.toString();
   }
 
-  static deserialize(n: bigint): StateWithPlayer {
+  static deserialize(str: string): StateWithPlayer {
+    const n = BigInt(str);
     const state = new State();
     state.movedNeutrino = !!(n & BigInt(1));
     const currentPlayer = n & BigInt(0b10) ? "1" : "0";
@@ -119,6 +125,32 @@ export class StateWithPlayer {
     }
 
     return new StateWithPlayer(state, currentPlayer);
+  }
+
+  getMoveToState(newState: StateWithPlayer): MoveType {
+    const newSerialized = newState.serialize();
+    const newPlayer = this.state.movedNeutrino
+      ? (1 - parseInt(this.currentPlayer)).toString()
+      : this.currentPlayer;
+
+    for (let move of getValidMoves(this.state, this.currentPlayer)) {
+      const stateWithoutPlayer = produce(this.state, (state) => {
+        Neutrino.moves.move(
+          state,
+          { currentPlayer: this.currentPlayer } as any,
+          move.args[0],
+          move.args[1]
+        );
+      });
+
+      const state = new StateWithPlayer(stateWithoutPlayer, newPlayer);
+
+      if (state.serialize() === newSerialized) {
+        return move;
+      }
+    }
+
+    return null;
   }
 
   static PIECE_CHARS = (() => {
@@ -243,11 +275,6 @@ export function getValidMovesFrom(cells: Grid, [x, y]: Position): Position[] {
   }
   return res;
 }
-
-type MoveType = {
-  move: string;
-  args: [Position, Position];
-};
 
 export function getValidMoves(state: State, currentPlayer: string): MoveType[] {
   const piece = getPieceToMove(state, currentPlayer);

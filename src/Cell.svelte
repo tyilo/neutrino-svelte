@@ -117,6 +117,12 @@
     background-color: #777;
   }
 
+  .neutrino::after {
+    content: "ν";
+    font-size: 2em;
+    color: white;
+  }
+
   .validMoveSource {
     background-color: lightgreen;
   }
