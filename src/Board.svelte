@@ -66,6 +66,7 @@
   <table>
     {#each fives as y}
       <tr>
+        <th>{5 - y}</th>
         {#each fives as x}
           <Cell
             piece={state.cells[y][x]}
@@ -81,6 +82,12 @@
         {/each}
       </tr>
     {/each}
+    <tr>
+      <th />
+      {#each fives as x}
+        <th>{String.fromCharCode("a".charCodeAt(0) + x)}</th>
+      {/each}
+    </tr>
   </table>
 {/if}
 
@@ -94,5 +101,10 @@
   tr:nth-child(odd) :global(td):nth-child(even) {
     background-image: linear-gradient(0deg, #ccc, #ccc);
     background-blend-mode: multiply;
+  }
+
+  th {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
   }
 </style>

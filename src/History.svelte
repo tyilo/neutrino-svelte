@@ -8,7 +8,9 @@
   export let historyIndex: number;
 
   function positionString(position: Position): string {
-    return String.fromCharCode("a".charCodeAt(0) + position[0]) + position[1];
+    return (
+      String.fromCharCode("a".charCodeAt(0) + position[0]) + (5 - position[1])
+    );
   }
 
   function moveString(from: State, to: State): string {
