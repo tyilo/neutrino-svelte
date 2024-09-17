@@ -140,6 +140,32 @@ export class State {
     return res;
   }
 
+  moveTo(state: State): Move {
+    let from: Position | undefined;
+    let to: Position | undefined;
+    for (let y = 0; y < 5; y++) {
+      for (let x = 0; x < 5; x++) {
+        if (this.cells[y][x] !== state.cells[y][x]) {
+          if (this.cells[y][x] !== Piece.None) {
+            if (from !== undefined) {
+              throw new Error(`Invalid moveTo`);
+            }
+            from = [x, y];
+          } else {
+            if (to !== undefined) {
+              throw new Error(`Invalid moveTo`);
+            }
+            to = [x, y];
+          }
+        }
+      }
+    }
+    if (from === undefined || to === undefined) {
+      throw new Error(`Invalid moveTo`);
+    }
+    return [from, to];
+  }
+
   getValidMoves(): Move[] {
     if (this.getWinner() !== undefined) return [];
     return this.getValidMovesIfNoWinner();

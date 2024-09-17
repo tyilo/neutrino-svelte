@@ -5,6 +5,7 @@
   import Board from "./Board.svelte";
   import { Player, State } from "./game";
   import { BotType } from "./bots";
+  import History from "./History.svelte";
 
   type StateInfo = {
     id: string;
@@ -138,15 +139,22 @@
   }
 
   function undo() {
-    historyIndex--;
+    gotoHistory(historyIndex - 1);
+  }
+
+  function redo() {
+    gotoHistory(historyIndex + 1);
+  }
+
+  function gotoHistory(newIndex: number): void {
+    console.log(newIndex, history.length);
+    historyIndex = newIndex;
     state = history[historyIndex];
     handleNewState();
   }
 
-  function redo() {
-    historyIndex++;
-    state = history[historyIndex];
-    handleNewState();
+  function handleGotoHistory(e: CustomEvent): void {
+    gotoHistory(e.detail);
   }
 
   $: botToMove = !isHuman[state.currentPlayer];
@@ -159,63 +167,68 @@
 </script>
 
 <main>
-  <div>
-    <button type="button" on:click={reset}>Reset</button>
-    <br />
-    <button type="button" on:click={toggleStart}
-      >{#if started}Stop{:else}Start{/if}</button
-    >
-    <br />
-    <button type="button" on:click={undo} disabled={historyIndex === 0}
-      >Undo</button
-    >
-    <button
-      type="button"
-      on:click={redo}
-      disabled={historyIndex === history.length - 1}>Redo</button
-    >
-  </div>
-  <div id="valuation">
-    <details>
-      <summary>Optimal valuation</summary>
-      {#if valuation === undefined}
-        ???
-      {:else if valuation === null}
-        Draw
-      {:else}
-        <b>{valuation}</b> will win with optimal play
-      {/if}
-    </details>
-  </div>
-  <fieldset disabled={botMoving || winner !== undefined}>
-    <div
-      class="player"
-      class:currentPlayer={state.currentPlayer === Player.Black}
-    >
-      <PlayerSelect bind:botType={botTypes[1]} />
-    </div>
-    <Board {isHuman} bind:state on:move={handleHumanMove} />
-    <div
-      class="player"
-      class:currentPlayer={state.currentPlayer === Player.White}
-    >
-      <PlayerSelect bind:botType={botTypes[0]} />
-    </div>
+  <div id="center">
     <div>
-      Status:
-      {#if winner !== undefined}
-        <b>{winner === Player.White ? "White" : "Black"} has won the game!</b>
-      {:else if botToMove}
-        {#if started}
-          Waiting for bot...
-        {:else}
-          Stopped
-        {/if}
-      {:else}
-        Waiting for human...
-      {/if}
+      <button type="button" on:click={reset}>Reset</button>
+      <br />
+      <button type="button" on:click={toggleStart}
+        >{#if started}Stop{:else}Start{/if}</button
+      >
+      <br />
+      <button type="button" on:click={undo} disabled={historyIndex === 0}
+        >Undo</button
+      >
+      <button
+        type="button"
+        on:click={redo}
+        disabled={historyIndex === history.length - 1}>Redo</button
+      >
     </div>
-  </fieldset>
+    <div id="valuation">
+      <details>
+        <summary>Optimal valuation</summary>
+        {#if valuation === undefined}
+          ???
+        {:else if valuation === null}
+          Draw
+        {:else}
+          <b>{valuation}</b> will win with optimal play
+        {/if}
+      </details>
+    </div>
+    <fieldset disabled={botMoving || winner !== undefined}>
+      <div
+        class="player"
+        class:currentPlayer={state.currentPlayer === Player.Black}
+      >
+        <PlayerSelect bind:botType={botTypes[1]} />
+      </div>
+      <Board {isHuman} bind:state on:move={handleHumanMove} />
+      <div
+        class="player"
+        class:currentPlayer={state.currentPlayer === Player.White}
+      >
+        <PlayerSelect bind:botType={botTypes[0]} />
+      </div>
+      <div>
+        Status:
+        {#if winner !== undefined}
+          <b>{winner === Player.White ? "White" : "Black"} has won the game!</b>
+        {:else if botToMove}
+          {#if started}
+            Waiting for bot...
+          {:else}
+            Stopped
+          {/if}
+        {:else}
+          Waiting for human...
+        {/if}
+      </div>
+    </fieldset>
+  </div>
+  <div id="history">
+    <History {history} {historyIndex} on:goto={handleGotoHistory} />
+  </div>
 </main>
 
 <style>
@@ -223,6 +236,18 @@
     text-align: center;
     padding: 1em;
     margin: 0 auto;
+    display: grid;
+    grid-template:
+      "none center sidebar" 1fr
+      / 200px 1fr 200px;
+  }
+
+  #center {
+    grid-area: center;
+  }
+
+  #history {
+    grid-area: sidebar;
   }
 
   #valuation {
