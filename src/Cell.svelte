@@ -1,24 +1,25 @@
 <script lang="ts">
   import interact from "interactjs";
   import { createEventDispatcher, onMount } from "svelte";
-  import { PIECE } from "./game";
+  import { Piece, type Position } from "./game";
+  import type { Interactable } from "@interactjs/core/Interactable";
 
   export let position: [number, number];
-  export let piece: PIECE;
+  export let piece: Piece;
   export let movable: boolean;
   export let validMoveSource: boolean;
   export let validMoveTarget: boolean;
 
   const dispatch = createEventDispatcher();
 
-  function getPosition(element: HTMLElement): [number, number] {
+  function getPosition(element: HTMLElement): Position {
     return ["x", "y"].map((k) =>
-      parseInt(element.getAttribute(`data-${k}`))
+      parseInt(element.getAttribute(`data-${k}`)!)
     ) as [number, number];
   }
 
   let draggedOver = false;
-  let draggable = null;
+  let draggable: Interactable | undefined;
   onMount(() => {
     let dragX = 0;
     let dragY = 0;
@@ -39,7 +40,7 @@
           dispatch("moveEnd");
           dragX = 0;
           dragY = 0;
-          pieceElement.style.transform = null;
+          pieceElement.style.transform = "";
         },
       },
     });
@@ -61,11 +62,11 @@
     });
   });
 
-  let cellElement: HTMLTableDataCellElement;
+  let cellElement: HTMLTableCellElement;
   let pieceElement: HTMLDivElement;
 
   $: {
-    if (draggable) {
+    if (draggable !== undefined) {
       draggable.draggable(validMoveSource && movable);
     }
   }
@@ -81,10 +82,10 @@
 >
   <div
     bind:this={pieceElement}
-    class:piece={piece !== PIECE.None}
-    class:white={piece === PIECE.White}
-    class:black={piece === PIECE.Black}
-    class:neutrino={piece === PIECE.Neutrino}
+    class:piece={piece !== Piece.None}
+    class:white={piece === Piece.White}
+    class:black={piece === Piece.Black}
+    class:neutrino={piece === Piece.Neutrino}
   />
   <div class="moveTarget" />
 </td>

@@ -3,20 +3,8 @@
 
   import PlayerSelect from "./PlayerSelect.svelte";
   import Board from "./Board.svelte";
-  import { Client } from "boardgame.io/client";
-  import { MCTSBot } from "boardgame.io/ai";
-  import type { StateType } from "./game";
-  import { Neutrino, StateWithPlayer } from "./game";
-  import { tick } from "svelte";
+  import { Player, State } from "./game";
   import { BotType } from "./bots";
-  import { Debug } from "boardgame.io/debug";
-
-  const client = Client({
-    game: Neutrino,
-    debug: { impl: Debug, collapseOnLoad: true },
-  });
-  (window as any).client = client;
-  client.start();
 
   type StateInfo = {
     id: string;
@@ -25,30 +13,19 @@
     optimal_winner: string | null;
   };
 
-  async function fetchExternalInfo(state: StateType): Promise<StateInfo> {
-    const s = new StateWithPlayer(state.G, state.ctx.currentPlayer);
-
+  async function fetchExternalInfo(state: State): Promise<StateInfo> {
     const url = new URL("https://api.neutrino.tyilo.com/info");
-    url.searchParams.set("id", s.serialize());
+    url.searchParams.set("id", state.serialize());
     const res = await fetch(url);
     const data = await res.json();
     return data;
   }
 
-  let valuation: string | null | undefined;
-  client.subscribe(async (newState: StateType) => {
-    valuation = undefined;
-    const info = await fetchExternalInfo(newState);
-    if (info.optimal_winner === null) {
-      valuation = null;
-    } else {
-      valuation = info.optimal_winner.replace(/^./, (c) => c.toUpperCase());
-    }
-  });
+  let state = new State();
+  let winner: Player | undefined;
+  $: winner = state.getWinner();
 
-  let state: StateType;
-  let winner: string;
-  let currentPlayer: number;
+  $: (window as any).state = state;
 
   let botTypes: [BotType, BotType] = [BotType.Human, BotType.Human];
   $: isHuman = [
@@ -58,22 +35,10 @@
 
   let botToMove = false;
   let botMoving = false;
-  let started = null;
-
-  let botIterations = 2000;
-  let botPlayoutDepth = 50;
-
-  const localBot = new MCTSBot({
-    game: client.game,
-    enumerate: client.game.ai.enumerate,
-    iterations: botIterations,
-    playoutDepth: botPlayoutDepth,
-    iterationCallback: botIterationCallback,
-  });
-  localBot.setOpt("async", true);
+  let started = false;
 
   let stopCount = 0;
-  function toggleStart() {
+  function toggleStart(): void {
     started = !started;
     if (!started) {
       stopCount++;
@@ -81,55 +46,38 @@
     }
   }
 
-  function reset() {
+  function reset(): void {
     stopCount++;
     botMoving = false;
-    started = null;
-    winner = null;
-    client.reset();
+    started = false;
+    winner = undefined;
+    state = new State();
   }
 
-  async function getExternalMove() {
-    const s = new StateWithPlayer(state.G, state.ctx.currentPlayer);
+  async function getExternalNextState(): Promise<State> {
     const data = await fetchExternalInfo(state);
 
     if (data.optimal_move_id) {
-      const newState = StateWithPlayer.deserialize(data.optimal_move_id);
-      const move = s.getMoveToState(newState);
-      if (move === null) {
-        console.error("Got null move:", s, newState);
-      } else {
-        return {
-          action: {
-            type: "MAKE_MOVE",
-            payload: {
-              type: move.move,
-              args: move.args,
-            },
-          },
-        };
-      }
+      return State.deserialize(data.optimal_move_id);
     } else {
-      console.error(data);
+      throw new Error(`No optimal move found.`);
     }
   }
 
-  function timeout(ms) {
+  function timeout(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async function getBotMove() {
+  async function getBotNextState(): Promise<State> {
     const MIN_TIME = 1000;
     const startTime = Date.now();
 
-    let botType = botTypes[currentPlayer];
-    let move;
-    if (botType === BotType.LocalBot) {
-      move = await localBot.play(state, state.ctx.currentPlayer);
-    } else if (botType === BotType.ExternalBot) {
-      move = await getExternalMove();
+    let botType = botTypes[state.currentPlayer];
+    let nextState;
+    if (botType === BotType.ExternalBot) {
+      nextState = await getExternalNextState();
     } else {
-      console.error("Unknown bot type:", botType);
+      throw new Error(`Unknown bot type: ${botType}`);
     }
 
     const endTime = Date.now();
@@ -137,54 +85,54 @@
     const delay = Math.max(0, MIN_TIME - diff);
     await timeout(delay);
 
-    return move;
+    return nextState;
   }
 
-  async function botMove() {
+  async function botMove(): Promise<void> {
     const startStopCount = stopCount;
     botMoving = true;
 
-    const result = await getBotMove();
+    const nextState = await getBotNextState();
     botMoving = false;
 
     if (stopCount !== startStopCount) {
       return;
     }
 
-    const action = result.action;
-    if (!action) {
-      return;
-    }
+    state = nextState;
+    handleMove();
+  }
 
-    if (action.type === "MAKE_MOVE") {
-      client.moves[action.payload.type].apply(null, action.payload.args);
+  let valuation: string | null | undefined;
+  async function updateValuation(): Promise<void> {
+    valuation = undefined;
+    const info = await fetchExternalInfo(state);
+    if (info.optimal_winner === null) {
+      valuation = null;
     } else {
-      console.error("Got unknown action:", action);
+      valuation = info.optimal_winner.replace(/^./, (c) => c.toUpperCase());
     }
   }
+  updateValuation();
 
-  let botProgress = 0;
-  function botIterationCallback({ iterationCounter, numIterations, metadata }) {
-    metadata; // ignore unused
-    botProgress = iterationCounter / numIterations;
+  function handleMove(): void {
+    updateValuation();
   }
 
-  function handleMove() {
+  function handleHumanMove(): void {
     if (!started) {
       started = true;
     }
+    handleMove();
   }
 
-  $: botToMove = !isHuman[currentPlayer];
+  $: botToMove = !isHuman[state.currentPlayer];
 
   $: {
-    if (started && !botMoving && botToMove && winner === null) {
+    if (started && !botMoving && botToMove && winner === undefined) {
       botMove();
     }
   }
-
-  $: localBot.setOpt("iterations", botIterations);
-  $: localBot.setOpt("playoutDepth", botPlayoutDepth);
 </script>
 
 <main>
@@ -207,41 +155,33 @@
       {/if}
     </details>
   </div>
-  <fieldset disabled={botMoving || winner !== null}>
-    <div class="player" class:currentPlayer={currentPlayer === 1}>
+  <fieldset disabled={botMoving || winner !== undefined}>
+    <div
+      class="player"
+      class:currentPlayer={state.currentPlayer === Player.Black}
+    >
       <PlayerSelect bind:botType={botTypes[1]} />
     </div>
-    <Board
-      {client}
-      {isHuman}
-      bind:currentPlayer
-      bind:state
-      bind:winner
-      on:move={handleMove}
-    />
-    <div class="player" class:currentPlayer={currentPlayer === 0}>
+    <Board {isHuman} bind:state on:move={handleHumanMove} />
+    <div
+      class="player"
+      class:currentPlayer={state.currentPlayer === Player.White}
+    >
       <PlayerSelect bind:botType={botTypes[0]} />
     </div>
     <div>
       Status:
-      {#if winner !== null}
-        <b>{winner === "0" ? "White" : "Black"} has won the game!</b>
-      {:else if botToMove}{#if started}Waiting for bot...<br />
-          <progress value={botProgress} />{:else}Stopped{/if}{:else}Waiting for
-        human...{/if}
-    </div>
-    <h3>Local bot options</h3>
-    <div class="botOptions">
-      <label for="iterations">Iterations:</label>
-      <input
-        name="iterations"
-        type="number"
-        min="1"
-        bind:value={botIterations}
-      />
-      <br />
-      <label for="depth">Depth:</label>
-      <input type="number" min="1" bind:value={botPlayoutDepth} />
+      {#if winner !== undefined}
+        <b>{winner === Player.White ? "White" : "Black"} has won the game!</b>
+      {:else if botToMove}
+        {#if started}
+          Waiting for bot...
+        {:else}
+          Stopped
+        {/if}
+      {:else}
+        Waiting for human...
+      {/if}
     </div>
   </fieldset>
 </main>
@@ -292,21 +232,5 @@
 
   .currentPlayer {
     border-color: green;
-  }
-
-  .botOptions {
-    margin: auto;
-    margin-top: 1em;
-    width: 200px;
-    text-align: left;
-  }
-
-  .botOptions label {
-    display: inline-block;
-    width: 75px;
-  }
-
-  .botOptions input {
-    width: 75px;
   }
 </style>

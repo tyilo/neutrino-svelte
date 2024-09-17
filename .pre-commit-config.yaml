@@ -2,7 +2,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.6.0
     hooks:
       - id: mixed-line-ending
       - id: trailing-whitespace
@@ -10,9 +10,9 @@ repos:
       - id: check-added-large-files
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.2.1
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         additional_dependencies:
-          - prettier-plugin-svelte@2.1.1
-          - svelte@3.31.2
+          - prettier-plugin-svelte@3.2.6
+          - svelte@4.2.19

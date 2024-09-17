@@ -1,51 +1,38 @@
 <script lang="ts">
-  import type { Client } from "boardgame.io/client";
-  import type { Grid, StateType } from "./game";
-  import { getPieceToMove, getValidMovesFrom } from "./game";
+  import type { State, Player, Position } from "./game";
   import Cell from "./Cell.svelte";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
 
-  export let client: ReturnType<typeof Client>;
   export let isHuman: [boolean, boolean];
-  export let currentPlayer: number = null;
-  export let state: StateType = null;
-  export let winner: string = null;
+  export let state: State;
 
-  let pieceToMove = null;
-  client.subscribe((newState: StateType) => {
-    state = newState;
-    currentPlayer = parseInt(state.ctx.currentPlayer);
-    pieceToMove = getPieceToMove(state.G, state.ctx.currentPlayer);
-    if (state.ctx.gameover) {
-      winner = state.ctx.gameover.winner;
-    } else {
-      winner = null;
-    }
-  });
+  let winner: Player | undefined;
+  $: winner = state.getWinner();
 
-  function canMoveFrom(cells: Grid, [x, y]: [number, number]): boolean {
-    return winner === null && pieceToMove === cells[y][x];
+  function canMoveFrom(state: State, [x, y]: Position): boolean {
+    return winner === undefined && state.getPieceToMove() === state.cells[y][x];
   }
 
   function canMoveTo(
-    validMoveTargets: [number, number][],
-    [x, y]: [number, number]
+    _state: State,
+    validMoveTargets: Position[],
+    [x, y]: Position
   ): boolean {
     return validMoveTargets.some((p) => p[0] === x && p[1] === y);
   }
 
-  function handleMove(e: CustomEvent) {
-    if (canMoveTo(validMoveTargets, e.detail.to)) {
-      client.moves.move(e.detail.from, e.detail.to);
-      dispatch("move");
-    }
+  let validMoveTargets: Position[] = [];
+  function handleMoveStart(e: CustomEvent) {
+    validMoveTargets = state.getValidMovesFrom(e.detail.from);
   }
 
-  let validMoveTargets = [];
-  function handleMoveStart(e: CustomEvent) {
-    validMoveTargets = getValidMovesFrom(state.G.cells, e.detail.from);
+  function handleMove(e: CustomEvent) {
+    if (canMoveTo(state, validMoveTargets, e.detail.to)) {
+      state = state.move([e.detail.from, e.detail.to]);
+      dispatch("move");
+    }
   }
 
   function handleMoveEnd() {
@@ -61,10 +48,10 @@
       <tr>
         {#each fives as x}
           <Cell
-            piece={state.G.cells[y][x]}
-            validMoveSource={canMoveFrom(state.G.cells, [x, y])}
-            movable={isHuman[currentPlayer]}
-            validMoveTarget={canMoveTo(validMoveTargets, [x, y])}
+            piece={state.cells[y][x]}
+            validMoveSource={canMoveFrom(state, [x, y])}
+            movable={isHuman[state.currentPlayer]}
+            validMoveTarget={canMoveTo(state, validMoveTargets, [x, y])}
             position={[x, y]}
             on:move={handleMove}
             on:moveStart={handleMoveStart}
