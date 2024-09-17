@@ -4,31 +4,15 @@
   import PlayerSelect from "./PlayerSelect.svelte";
   import Board from "./Board.svelte";
   import { Player, State } from "./game";
+  import { getExternalInfo } from "./valuation";
   import { BotType } from "./bots";
   import History from "./History.svelte";
-
-  type StateInfo = {
-    id: string;
-    index: number;
-    optimal_move_id: string | null;
-    optimal_winner: string | null;
-  };
-
-  async function fetchExternalInfo(state: State): Promise<StateInfo> {
-    const url = new URL("https://api.neutrino.tyilo.com/info");
-    url.searchParams.set("id", state.serialize());
-    const res = await fetch(url);
-    const data = await res.json();
-    return data;
-  }
 
   let state = new State();
   let history = [state];
   let historyIndex = 0;
   let winner: Player | undefined;
   $: winner = state.getWinner();
-
-  $: (window as any).state = state;
 
   let botTypes: [BotType, BotType] = [BotType.Human, BotType.Human];
   $: isHuman = [
@@ -60,7 +44,7 @@
   }
 
   async function getExternalNextState(): Promise<State> {
-    const data = await fetchExternalInfo(state);
+    const data = await getExternalInfo(state);
 
     if (data.optimal_move_id) {
       return State.deserialize(data.optimal_move_id);
@@ -68,6 +52,8 @@
       throw new Error(`No optimal move found.`);
     }
   }
+
+  let showValuations = false;
 
   function timeout(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -111,7 +97,7 @@
   let valuation: string | null | undefined;
   async function updateValuation(): Promise<void> {
     valuation = undefined;
-    const info = await fetchExternalInfo(state);
+    const info = await getExternalInfo(state);
     if (info.optimal_winner === null) {
       valuation = null;
     } else {
@@ -175,7 +161,7 @@
       >
         <PlayerSelect bind:botType={botTypes[1]} />
       </div>
-      <Board {isHuman} bind:state on:move={handleHumanMove} />
+      <Board {isHuman} {showValuations} bind:state on:move={handleHumanMove} />
       <div
         class="player"
         class:currentPlayer={state.currentPlayer === Player.White}
@@ -225,7 +211,7 @@
       /></label
     >
     <div id="valuation">
-      <details>
+      <details bind:open={showValuations}>
         <summary>Optimal valuation</summary>
         {#if valuation === undefined}
           ???

@@ -66,6 +66,14 @@ export class State {
     return clone;
   }
 
+  previousMovePlayer(): Player {
+    if (this.movedNeutrino) {
+      return this.currentPlayer;
+    } else {
+      return oppositePlayer(this.currentPlayer);
+    }
+  }
+
   getWinner(): Player | undefined {
     const neutrinoPos = this.getNeutrinoPosition();
 

@@ -2,13 +2,15 @@
   import interact from "interactjs";
   import { createEventDispatcher, onMount } from "svelte";
   import { Piece, type Position } from "./game";
+  import { Valuation } from "./valuation";
   import type { Interactable } from "@interactjs/core/Interactable";
 
-  export let position: [number, number];
+  export let position: Position;
   export let piece: Piece;
   export let movable: boolean;
   export let validMoveSource: boolean;
   export let validMoveTarget: boolean;
+  export let targetValuation: Promise<Valuation | undefined>;
 
   const dispatch = createEventDispatcher();
 
@@ -70,6 +72,23 @@
       draggable.draggable(validMoveSource && movable);
     }
   }
+
+  async function getTargetClass(targetValuation: Promise<Valuation | undefined>): Promise<string> {
+    const valuation = await targetValuation;
+    switch (valuation) {
+      case undefined: return "no-valuation";
+      case Valuation.Loss: return "loss-valuation";
+      case Valuation.Neutral: return "neutral-valuation";
+      case Valuation.Win: return "win-valuation";
+    }
+  }
+
+  async function updateTargetClass(targetValuation: Promise<Valuation | undefined>): Promise<void> {
+    targetClass = await getTargetClass(targetValuation);
+  }
+
+  let targetClass: string = "no-valuation";
+  $: updateTargetClass(targetValuation);
 </script>
 
 <td
@@ -87,7 +106,7 @@
     class:black={piece === Piece.Black}
     class:neutrino={piece === Piece.Neutrino}
   />
-  <div class="moveTarget" />
+  <div class="moveTarget {targetClass}" data-foo={targetClass} />
 </td>
 
 <style>
@@ -132,8 +151,25 @@
     width: 0;
     height: 0;
     border-radius: 100%;
-    border: 10px #090 solid;
+    border-width: 10px;
+    border-style: solid;
     margin: auto;
+  }
+
+  .no-valuation {
+    border-color: #999;
+  }
+
+  .neutral-valuation {
+    border-color: #00b;
+  }
+
+  .loss-valuation {
+    border-color: #b00;
+  }
+
+  .win-valuation {
+    border-color: #0b0;
   }
 
   .validMoveTarget.draggedOver {
