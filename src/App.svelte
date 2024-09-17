@@ -239,6 +239,23 @@
       / 300px 1fr 300px;
   }
 
+  @media only screen and (max-width: 1200px) {
+    main {
+      grid-template:
+        "center sidebar" 1fr
+        / 1fr 300px;
+    }
+  }
+
+  @media only screen and (max-width: 900px) {
+    main {
+      grid-template:
+        "center" 1fr
+        "sidebar" 1fr
+        / 1fr;
+    }
+  }
+
   #center {
     grid-area: center;
   }
