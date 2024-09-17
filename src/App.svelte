@@ -73,8 +73,8 @@
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  let minBotTime: number = 1000;
   async function getBotNextState(): Promise<State> {
-    const MIN_TIME = 1000;
     const startTime = Date.now();
 
     let botType = botTypes[state.currentPlayer];
@@ -87,7 +87,7 @@
 
     const endTime = Date.now();
     const diff = endTime - startTime;
-    const delay = Math.max(0, MIN_TIME - diff);
+    const delay = Math.max(0, minBotTime - diff);
     await timeout(delay);
 
     return nextState;
@@ -215,6 +215,15 @@
         disabled={historyIndex === history.length - 1}>Redo</button
       >
     </div>
+    <label
+      >Min bot time: <input
+        id="bot-delay"
+        type="range"
+        min="0"
+        max="5000"
+        bind:value={minBotTime}
+      /></label
+    >
     <div id="valuation">
       <details>
         <summary>Optimal valuation</summary>
@@ -250,6 +259,10 @@
 
   #sidebar {
     grid-area: sidebar;
+  }
+
+  #bot-delay {
+    width: 250px;
   }
 
   #valuation {
