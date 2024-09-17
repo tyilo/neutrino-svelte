@@ -22,6 +22,8 @@
   }
 
   let state = new State();
+  let history = [state];
+  let historyIndex = 0;
   let winner: Player | undefined;
   $: winner = state.getWinner();
 
@@ -52,6 +54,8 @@
     started = false;
     winner = undefined;
     state = new State();
+    history = [state];
+    historyIndex = 0;
   }
 
   async function getExternalNextState(): Promise<State> {
@@ -115,8 +119,15 @@
   }
   updateValuation();
 
-  function handleMove(): void {
+  function handleNewState(): void {
     updateValuation();
+  }
+
+  function handleMove(): void {
+    historyIndex++;
+    history = history.slice(0, historyIndex);
+    history = [...history, state];
+    handleNewState();
   }
 
   function handleHumanMove(): void {
@@ -124,6 +135,18 @@
       started = true;
     }
     handleMove();
+  }
+
+  function undo() {
+    historyIndex--;
+    state = history[historyIndex];
+    handleNewState();
+  }
+
+  function redo() {
+    historyIndex++;
+    state = history[historyIndex];
+    handleNewState();
   }
 
   $: botToMove = !isHuman[state.currentPlayer];
@@ -141,6 +164,15 @@
     <br />
     <button type="button" on:click={toggleStart}
       >{#if started}Stop{:else}Start{/if}</button
+    >
+    <br />
+    <button type="button" on:click={undo} disabled={historyIndex === 0}
+      >Undo</button
+    >
+    <button
+      type="button"
+      on:click={redo}
+      disabled={historyIndex === history.length - 1}>Redo</button
     >
   </div>
   <div id="valuation">
