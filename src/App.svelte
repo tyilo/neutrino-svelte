@@ -168,34 +168,6 @@
 
 <main>
   <div id="center">
-    <div>
-      <button type="button" on:click={reset}>Reset</button>
-      <br />
-      <button type="button" on:click={toggleStart}
-        >{#if started}Stop{:else}Start{/if}</button
-      >
-      <br />
-      <button type="button" on:click={undo} disabled={historyIndex === 0}
-        >Undo</button
-      >
-      <button
-        type="button"
-        on:click={redo}
-        disabled={historyIndex === history.length - 1}>Redo</button
-      >
-    </div>
-    <div id="valuation">
-      <details>
-        <summary>Optimal valuation</summary>
-        {#if valuation === undefined}
-          ???
-        {:else if valuation === null}
-          Draw
-        {:else}
-          <b>{valuation}</b> will win with optimal play
-        {/if}
-      </details>
-    </div>
     <fieldset disabled={botMoving || winner !== undefined}>
       <div
         class="player"
@@ -226,7 +198,37 @@
       </div>
     </fieldset>
   </div>
-  <div id="history">
+  <div id="sidebar">
+    <div>
+      <button type="button" on:click={reset}>Reset</button>
+      <br />
+      <button type="button" on:click={toggleStart}
+        >{#if started}Stop{:else}Start{/if}</button
+      >
+      <br />
+      <button type="button" on:click={undo} disabled={historyIndex === 0}
+        >Undo</button
+      >
+      <button
+        type="button"
+        on:click={redo}
+        disabled={historyIndex === history.length - 1}>Redo</button
+      >
+    </div>
+    <div id="valuation">
+      <details>
+        <summary>Optimal valuation</summary>
+        {#if valuation === undefined}
+          ???
+        {:else if valuation === null}
+          Draw
+        {:else}
+          <b>{valuation}</b> will win with optimal play
+        {/if}
+      </details>
+    </div>
+    <br />
+    <br />
     <History {history} {historyIndex} on:goto={handleGotoHistory} />
   </div>
 </main>
@@ -239,14 +241,14 @@
     display: grid;
     grid-template:
       "none center sidebar" 1fr
-      / 200px 1fr 200px;
+      / 300px 1fr 300px;
   }
 
   #center {
     grid-area: center;
   }
 
-  #history {
+  #sidebar {
     grid-area: sidebar;
   }
 
