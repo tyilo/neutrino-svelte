@@ -7,6 +7,7 @@
   import { getExternalInfo } from "./valuation";
   import { BotType } from "./bots";
   import History from "./History.svelte";
+  import { decodeStateList, encodeStateList } from "./encoding";
 
   let state = new State();
   let history = [state];
@@ -47,7 +48,7 @@
     const data = await getExternalInfo(state);
 
     if (data.optimal_move_id) {
-      return State.deserialize(data.optimal_move_id);
+      return State.deserializeString(data.optimal_move_id);
     } else {
       throw new Error(`No optimal move found.`);
     }
@@ -133,7 +134,6 @@
   }
 
   function gotoHistory(newIndex: number): void {
-    console.log(newIndex, history.length);
     historyIndex = newIndex;
     state = history[historyIndex];
     handleNewState();
@@ -141,6 +141,26 @@
 
   function handleGotoHistory(e: CustomEvent): void {
     gotoHistory(e.detail);
+  }
+
+  let initialized = false;
+
+  $: {
+    if (!initialized) {
+      try {
+        history = [...history, ...decodeStateList(window.location.hash.substring(1))];
+        historyIndex = history.length - 1;
+        state = history[historyIndex];
+      } catch (e) {
+        console.error(e);
+      }
+      initialized = true;
+    }
+    let url = "/";
+    if (history.length > 1) {
+      url += `#${encodeStateList(history.slice(1))}`;
+    }
+    window.history.replaceState(undefined, "", url);
   }
 
   $: botToMove = !isHuman[state.currentPlayer];

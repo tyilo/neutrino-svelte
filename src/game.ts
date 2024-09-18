@@ -49,7 +49,7 @@ export class State {
     for (let y = 0; y < 5; y++) {
       const player = HOME_ROW.get(y);
       cells.push(
-        Array(5).fill(player === undefined ? Piece.None : toPiece(player))
+        Array(5).fill(player === undefined ? Piece.None : toPiece(player)),
       );
     }
     cells[2][2] = Piece.Neutrino;
@@ -219,7 +219,7 @@ export class State {
     return pos[0];
   }
 
-  serialize(): string {
+  serializeBigInt(): bigint {
     let res = BigInt(0);
     res |= BigInt(this.movedNeutrino) << BigInt(0);
     res |= BigInt(this.currentPlayer === Player.Black) << BigInt(1);
@@ -230,12 +230,14 @@ export class State {
         res |= BigInt(this.cells[y][x] as number) << BigInt(2 * (i + 1));
       }
     }
-
-    return res.toString();
+    return res;
   }
 
-  static deserialize(str: string): State {
-    const n = BigInt(str);
+  serializeString(): string {
+    return this.serializeBigInt().toString();
+  }
+
+  static deserializeBigInt(n: bigint): State {
     const state = new State();
     state.movedNeutrino = !!(n & BigInt(1));
     state.currentPlayer = n & BigInt(0b10) ? Player.Black : Player.White;
@@ -252,6 +254,10 @@ export class State {
     return state;
   }
 
+  static deserializeString(str: string): State {
+    return this.deserializeBigInt(BigInt(str));
+  }
+
   static PIECE_CHARS = (() => {
     let s = new Map<string, Piece>();
     s.set(".", Piece.None);
@@ -263,7 +269,7 @@ export class State {
   static fromArray(
     currentPlayer: Player,
     movedNeutrino: boolean,
-    cells: StringGrid
+    cells: StringGrid,
   ): State {
     const state = new State();
     state.currentPlayer = currentPlayer;

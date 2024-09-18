@@ -18,7 +18,7 @@ async function fetchExternalInfo(id: string): Promise<StateInfo> {
 }
 
 export async function getExternalInfo(state: State): Promise<StateInfo> {
-  const id = state.serialize();
+  const id = state.serializeString();
   const cachedData = CACHE.get(id);
   if (cachedData) {
     return await cachedData;

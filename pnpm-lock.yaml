@@ -1195,8 +1195,8 @@ snapshots:
   "@rollup/rollup-win32-x64-msvc@4.21.3":
     optional: true
 
-  ? "@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8)))(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8))"
-  : dependencies:
+  "@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8)))(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8))":
+    dependencies:
       "@sveltejs/vite-plugin-svelte": 3.1.2(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8))
       debug: 4.3.7
       svelte: 4.2.19
@@ -1204,8 +1204,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ? "@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8))"
-  : dependencies:
+  "@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8))":
+    dependencies:
       "@sveltejs/vite-plugin-svelte-inspector": 2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8)))(svelte@4.2.19)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8))
       debug: 4.3.7
       deepmerge: 4.3.1
@@ -1234,8 +1234,8 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  ? "@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8))"
-  : dependencies:
+  "@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.4.6(@types/node@22.1.0)(sass@1.77.8))":
+    dependencies:
       "@vitest/spy": 2.1.1
       estree-walker: 3.0.3
       magic-string: 0.30.11
