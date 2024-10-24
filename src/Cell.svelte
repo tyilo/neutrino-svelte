@@ -5,12 +5,23 @@
   import { Valuation } from "./valuation";
   import type { Interactable } from "@interactjs/core/Interactable";
 
-  export let position: Position;
-  export let piece: Piece;
-  export let movable: boolean;
-  export let validMoveSource: boolean;
-  export let validMoveTarget: boolean;
-  export let targetValuation: Promise<Valuation | undefined>;
+  interface Props {
+    position: Position;
+    piece: Piece;
+    movable: boolean;
+    validMoveSource: boolean;
+    validMoveTarget: boolean;
+    targetValuation: Promise<Valuation | undefined>;
+  }
+
+  let {
+    position,
+    piece,
+    movable,
+    validMoveSource,
+    validMoveTarget,
+    targetValuation
+  }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
@@ -20,8 +31,8 @@
     ) as [number, number];
   }
 
-  let draggedOver = false;
-  let draggable: Interactable | undefined;
+  let draggedOver = $state(false);
+  let draggable: Interactable | undefined = $state();
   onMount(() => {
     let dragX = 0;
     let dragY = 0;
@@ -67,11 +78,11 @@
   let cellElement: HTMLTableCellElement;
   let pieceElement: HTMLDivElement;
 
-  $: {
+  $effect(() => {
     if (draggable !== undefined) {
       draggable.draggable(validMoveSource && movable);
     }
-  }
+  });
 
   async function getTargetClass(targetValuation: Promise<Valuation | undefined>): Promise<string> {
     const valuation = await targetValuation;
@@ -83,12 +94,15 @@
     }
   }
 
+  let targetClass: string = $state("no-valuation");
+
   async function updateTargetClass(targetValuation: Promise<Valuation | undefined>): Promise<void> {
     targetClass = await getTargetClass(targetValuation);
   }
 
-  let targetClass: string = "no-valuation";
-  $: updateTargetClass(targetValuation);
+  $effect(() => {
+    updateTargetClass(targetValuation);
+  });
 </script>
 
 <td

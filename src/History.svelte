@@ -1,11 +1,15 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { Move, Position, State } from "./game";
+  import type { Position, State } from "./game";
 
   const dispatch = createEventDispatcher();
 
-  export let history: State[];
-  export let historyIndex: number;
+  interface Props {
+    history: State[];
+    historyIndex: number;
+  }
+
+  let { history, historyIndex }: Props = $props();
 
   function positionString(position: Position): string {
     return (
@@ -22,9 +26,8 @@
     return positionString(move[0]) + positionString(move[1]);
   }
 
-  let moveRows: [number, State, State][][];
-  $: {
-    moveRows = [];
+  const moveRows: [number, State, State][][] = $derived.by(() => {
+    const moveRows: [number, State, State][][] = [];
     for (let i = 0; i < history.length - 1; i++) {
       const rowIndex = Math.floor(i / 4);
       if (rowIndex >= moveRows.length) {
@@ -32,7 +35,8 @@
       }
       moveRows[rowIndex].push([i, history[i], history[i + 1]]);
     }
-  }
+    return moveRows;
+  });
 
   function goto(index: number): void {
     dispatch("goto", index + 1);
@@ -56,7 +60,7 @@
         {#each moveRow as move}
           <td
             class:selected={move[0] === historyIndex - 1}
-            on:click={() => goto(move[0])}>{moveString(move[1], move[2])}</td
+            onclick={() => goto(move[0])}>{moveString(move[1], move[2])}</td
           >
         {/each}
       </tr>

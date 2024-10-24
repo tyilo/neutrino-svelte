@@ -1,7 +1,11 @@
 <script lang="ts">
   import { BotType } from "./bots";
 
-  export let botType: BotType = BotType.Human;
+  interface Props {
+    botType: BotType;
+  }
+
+  let { botType = $bindable() }: Props = $props();
 </script>
 
 <label>

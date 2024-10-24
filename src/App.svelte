@@ -9,21 +9,20 @@
   import History from "./History.svelte";
   import { decodeStateList, encodeStateList } from "./encoding";
 
-  let state = new State();
-  let history = [state];
-  let historyIndex = 0;
-  let winner: Player | undefined;
-  $: winner = state.getWinner();
+  let gameState = $state(new State());
+  let history = $state([new State()]);
+  let historyIndex = $state(0);
+  let winner: Player | undefined = $derived(gameState.getWinner());
 
-  let botTypes: [BotType, BotType] = [BotType.Human, BotType.Human];
-  $: isHuman = [
+  let botTypes: [BotType, BotType] = $state([BotType.Human, BotType.Human]);
+  let isHuman = $derived([
     botTypes[0] === BotType.Human,
     botTypes[1] === BotType.Human,
-  ] as [boolean, boolean];
+  ] as [boolean, boolean]);
 
-  let botToMove = false;
-  let botMoving = false;
-  let started = false;
+  let botToMove = $derived(!isHuman[gameState.currentPlayer]);
+  let botMoving = $state(false);
+  let started = $state(false);
 
   let stopCount = 0;
   function toggleStart(): void {
@@ -38,14 +37,13 @@
     stopCount++;
     botMoving = false;
     started = false;
-    winner = undefined;
-    state = new State();
-    history = [state];
+    gameState = new State();
+    history = [gameState];
     historyIndex = 0;
   }
 
   async function getExternalNextState(): Promise<State> {
-    const data = await getExternalInfo(state);
+    const data = await getExternalInfo(gameState);
 
     if (data.optimal_move_id) {
       return State.deserializeString(data.optimal_move_id);
@@ -54,17 +52,17 @@
     }
   }
 
-  let showValuations = false;
+  let showValuations = $state(false);
 
   function timeout(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  let minBotTime: number = 1000;
+  let minBotTime: number = $state(1000);
   async function getBotNextState(): Promise<State> {
     const startTime = Date.now();
 
-    let botType = botTypes[state.currentPlayer];
+    let botType = botTypes[gameState.currentPlayer];
     let nextState;
     if (botType === BotType.ExternalBot) {
       nextState = await getExternalNextState();
@@ -91,14 +89,14 @@
       return;
     }
 
-    state = nextState;
+    gameState = nextState;
     handleMove();
   }
 
-  let valuation: string | null | undefined;
+  let valuation: string | null | undefined = $state();
   async function updateValuation(): Promise<void> {
     valuation = undefined;
-    const info = await getExternalInfo(state);
+    const info = await getExternalInfo(gameState);
     if (info.optimal_winner === null) {
       valuation = null;
     } else {
@@ -114,7 +112,7 @@
   function handleMove(): void {
     historyIndex++;
     history = history.slice(0, historyIndex);
-    history = [...history, state];
+    history = [...history, gameState];
     handleNewState();
   }
 
@@ -135,7 +133,7 @@
 
   function gotoHistory(newIndex: number): void {
     historyIndex = newIndex;
-    state = history[historyIndex];
+    gameState = history[historyIndex];
     handleNewState();
   }
 
@@ -145,12 +143,15 @@
 
   let initialized = false;
 
-  $: {
+  $effect(() => {
     if (!initialized) {
       try {
-        history = [...history, ...decodeStateList(window.location.hash.substring(1))];
+        history = [
+          ...history,
+          ...decodeStateList(window.location.hash.substring(1)),
+        ];
         historyIndex = history.length - 1;
-        state = history[historyIndex];
+        gameState = history[historyIndex];
       } catch (e) {
         console.error(e);
       }
@@ -161,15 +162,13 @@
       url += `#${encodeStateList(history.slice(1))}`;
     }
     window.history.replaceState(undefined, "", url);
-  }
+  });
 
-  $: botToMove = !isHuman[state.currentPlayer];
-
-  $: {
+  $effect(() => {
     if (started && !botMoving && botToMove && winner === undefined) {
       botMove();
     }
-  }
+  });
 </script>
 
 <main>
@@ -177,14 +176,19 @@
     <fieldset disabled={botMoving || winner !== undefined}>
       <div
         class="player"
-        class:currentPlayer={state.currentPlayer === Player.Black}
+        class:currentPlayer={gameState.currentPlayer === Player.Black}
       >
         <PlayerSelect bind:botType={botTypes[1]} />
       </div>
-      <Board {isHuman} {showValuations} bind:state on:move={handleHumanMove} />
+      <Board
+        {isHuman}
+        {showValuations}
+        bind:gameState
+        on:move={handleHumanMove}
+      />
       <div
         class="player"
-        class:currentPlayer={state.currentPlayer === Player.White}
+        class:currentPlayer={gameState.currentPlayer === Player.White}
       >
         <PlayerSelect bind:botType={botTypes[0]} />
       </div>
@@ -206,18 +210,18 @@
   </div>
   <div id="sidebar">
     <div>
-      <button type="button" on:click={reset}>Reset</button>
+      <button type="button" onclick={reset}>Reset</button>
       <br />
-      <button type="button" on:click={toggleStart}
+      <button type="button" onclick={toggleStart}
         >{#if started}Stop{:else}Start{/if}</button
       >
       <br />
-      <button type="button" on:click={undo} disabled={historyIndex === 0}
+      <button type="button" onclick={undo} disabled={historyIndex === 0}
         >Undo</button
       >
       <button
         type="button"
-        on:click={redo}
+        onclick={redo}
         disabled={historyIndex === history.length - 1}>Redo</button
       >
     </div>

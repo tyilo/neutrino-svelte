@@ -6,12 +6,15 @@
 
   const dispatch = createEventDispatcher();
 
-  export let isHuman: [boolean, boolean];
-  export let state: State;
-  export let showValuations: boolean;
+  interface Props {
+    isHuman: [boolean, boolean];
+    gameState: State;
+    showValuations: boolean;
+  }
 
-  let winner: Player | undefined;
-  $: winner = state.getWinner();
+  let { isHuman, gameState = $bindable(), showValuations }: Props = $props();
+
+  let winner: Player | undefined = $derived(gameState.getWinner());
 
   function canMoveFrom(state: State, [x, y]: Position): boolean {
     return winner === undefined && state.getPieceToMove() === state.cells[y][x];
@@ -26,31 +29,40 @@
     return await getValuationForMove(state);
   }
 
-  let canMoveTo: boolean[][];
-  let targetValuations: Promise<Valuation | undefined>[][];
-  function resetCanMoveTo() {
-    canMoveTo = Array(5)
+  function emptyMoveTo(): boolean[][] {
+    return Array(5)
       .fill(undefined)
       .map(() => Array(5).fill(false));
-    targetValuations = Array(5)
+  }
+
+  function emptyTargetValuation(): Promise<Valuation | undefined>[][] {
+    return Array(5)
       .fill(undefined)
       .map(() => Array(5).fill(Promise.resolve(undefined)));
   }
-  resetCanMoveTo();
+
+  let canMoveTo: boolean[][] = $state(emptyMoveTo());
+  let targetValuations: Promise<Valuation | undefined>[][] = $state(
+    emptyTargetValuation()
+  );
+  function resetCanMoveTo() {
+    canMoveTo = emptyMoveTo();
+    targetValuations = emptyTargetValuation();
+  }
 
   function handleMoveStart(e: CustomEvent) {
     resetCanMoveTo();
-    for (let [x, y] of state.getValidMovesFrom(e.detail.from)) {
+    for (let [x, y] of gameState.getValidMovesFrom(e.detail.from)) {
       canMoveTo[y][x] = true;
       targetValuations[y][x] = getTargetValuation(
-        state.move([e.detail.from, [x, y]])
+        gameState.move([e.detail.from, [x, y]])
       );
     }
   }
 
   function handleMove(e: CustomEvent) {
     if (canMoveTo[e.detail.to[1]][e.detail.to[0]]) {
-      state = state.move([e.detail.from, e.detail.to]);
+      gameState = gameState.move([e.detail.from, e.detail.to]);
       dispatch("move");
     }
   }
@@ -62,32 +74,34 @@
   const fives = [0, 1, 2, 3, 4];
 </script>
 
-{#if state}
+{#if gameState}
   <table>
-    {#each fives as y}
+    <tbody>
+      {#each fives as y}
+        <tr>
+          <th>{5 - y}</th>
+          {#each fives as x}
+            <Cell
+              piece={gameState.cells[y][x]}
+              validMoveSource={canMoveFrom(gameState, [x, y])}
+              movable={isHuman[gameState.currentPlayer]}
+              validMoveTarget={canMoveTo[y][x]}
+              targetValuation={targetValuations[y][x]}
+              position={[x, y]}
+              on:move={handleMove}
+              on:moveStart={handleMoveStart}
+              on:moveEnd={handleMoveEnd}
+            />
+          {/each}
+        </tr>
+      {/each}
       <tr>
-        <th>{5 - y}</th>
+        <th />
         {#each fives as x}
-          <Cell
-            piece={state.cells[y][x]}
-            validMoveSource={canMoveFrom(state, [x, y])}
-            movable={isHuman[state.currentPlayer]}
-            validMoveTarget={canMoveTo[y][x]}
-            targetValuation={targetValuations[y][x]}
-            position={[x, y]}
-            on:move={handleMove}
-            on:moveStart={handleMoveStart}
-            on:moveEnd={handleMoveEnd}
-          />
+          <th>{String.fromCharCode("a".charCodeAt(0) + x)}</th>
         {/each}
       </tr>
-    {/each}
-    <tr>
-      <th />
-      {#each fives as x}
-        <th>{String.fromCharCode("a".charCodeAt(0) + x)}</th>
-      {/each}
-    </tr>
+    </tbody>
   </table>
 {/if}
 
