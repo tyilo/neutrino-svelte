@@ -117,9 +117,7 @@
   }
 
   function handleHumanMove(): void {
-    if (!started) {
-      started = true;
-    }
+    started = true;
     handleMove();
   }
 
@@ -132,6 +130,7 @@
   }
 
   function gotoHistory(newIndex: number): void {
+    started = false;
     historyIndex = newIndex;
     gameState = history[historyIndex];
     handleNewState();
