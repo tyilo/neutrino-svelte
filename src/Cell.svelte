@@ -1,6 +1,6 @@
 <script lang="ts">
   import interact from "interactjs";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { Piece, type Position } from "./game";
   import { Valuation } from "./valuation";
   import type { Interactable } from "@interactjs/core/Interactable";
@@ -12,6 +12,9 @@
     validMoveSource: boolean;
     validMoveTarget: boolean;
     targetValuation: Promise<Valuation | undefined>;
+    moveStart: (from: Position) => void;
+    moveEnd: () => void;
+    move: (from: Position, to: Position) => void;
   }
 
   let {
@@ -20,14 +23,15 @@
     movable,
     validMoveSource,
     validMoveTarget,
-    targetValuation
+    targetValuation,
+    moveStart,
+    moveEnd,
+    move,
   }: Props = $props();
-
-  const dispatch = createEventDispatcher();
 
   function getPosition(element: HTMLElement): Position {
     return ["x", "y"].map((k) =>
-      parseInt(element.getAttribute(`data-${k}`)!)
+      parseInt(element.getAttribute(`data-${k}`)!),
     ) as [number, number];
   }
 
@@ -40,9 +44,7 @@
       origin: "parent",
       listeners: {
         move: (event) => {
-          dispatch("moveStart", {
-            from: getPosition(event.target.parentNode),
-          });
+          moveStart(getPosition(event.target.parentNode));
 
           dragX += event.dx;
           dragY += event.dy;
@@ -50,7 +52,7 @@
           pieceElement.style.transform = `translate(${dragX}px, ${dragY}px)`;
         },
         end: (_event) => {
-          dispatch("moveEnd");
+          moveEnd();
           dragX = 0;
           dragY = 0;
           pieceElement.style.transform = "";
@@ -60,10 +62,10 @@
 
     interact(cellElement).dropzone({
       ondrop: (event) => {
-        dispatch("move", {
-          from: getPosition(event.relatedTarget.parentNode),
-          to: getPosition(event.target),
-        });
+        move(
+          getPosition(event.relatedTarget.parentNode),
+          getPosition(event.target),
+        );
         draggedOver = false;
       },
       ondragenter: (_event) => {
@@ -84,19 +86,27 @@
     }
   });
 
-  async function getTargetClass(targetValuation: Promise<Valuation | undefined>): Promise<string> {
+  async function getTargetClass(
+    targetValuation: Promise<Valuation | undefined>,
+  ): Promise<string> {
     const valuation = await targetValuation;
     switch (valuation) {
-      case undefined: return "no-valuation";
-      case Valuation.Loss: return "loss-valuation";
-      case Valuation.Neutral: return "neutral-valuation";
-      case Valuation.Win: return "win-valuation";
+      case undefined:
+        return "no-valuation";
+      case Valuation.Loss:
+        return "loss-valuation";
+      case Valuation.Neutral:
+        return "neutral-valuation";
+      case Valuation.Win:
+        return "win-valuation";
     }
   }
 
   let targetClass: string = $state("no-valuation");
 
-  async function updateTargetClass(targetValuation: Promise<Valuation | undefined>): Promise<void> {
+  async function updateTargetClass(
+    targetValuation: Promise<Valuation | undefined>,
+  ): Promise<void> {
     targetClass = await getTargetClass(targetValuation);
   }
 

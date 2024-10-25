@@ -2,17 +2,15 @@
   import type { State, Player, Position } from "./game";
   import { Valuation, getValuationForMove } from "./valuation";
   import Cell from "./Cell.svelte";
-  import { createEventDispatcher } from "svelte";
-
-  const dispatch = createEventDispatcher();
 
   interface Props {
     isHuman: [boolean, boolean];
     gameState: State;
     showValuations: boolean;
+    move: () => void;
   }
 
-  let { isHuman, gameState = $bindable(), showValuations }: Props = $props();
+  let { isHuman, gameState = $bindable(), showValuations, move }: Props = $props();
 
   let winner: Player | undefined = $derived(gameState.getWinner());
 
@@ -50,20 +48,20 @@
     targetValuations = emptyTargetValuation();
   }
 
-  function handleMoveStart(e: CustomEvent) {
+  function handleMoveStart(from: Position) {
     resetCanMoveTo();
-    for (let [x, y] of gameState.getValidMovesFrom(e.detail.from)) {
+    for (let [x, y] of gameState.getValidMovesFrom(from)) {
       canMoveTo[y][x] = true;
       targetValuations[y][x] = getTargetValuation(
-        gameState.move([e.detail.from, [x, y]])
+        gameState.move([from, [x, y]])
       );
     }
   }
 
-  function handleMove(e: CustomEvent) {
-    if (canMoveTo[e.detail.to[1]][e.detail.to[0]]) {
-      gameState = gameState.move([e.detail.from, e.detail.to]);
-      dispatch("move");
+  function handleMove(from: Position, to: Position) {
+    if (canMoveTo[to[1]][to[0]]) {
+      gameState = gameState.move([from, to]);
+      move();
     }
   }
 
@@ -88,9 +86,9 @@
               validMoveTarget={canMoveTo[y][x]}
               targetValuation={targetValuations[y][x]}
               position={[x, y]}
-              on:move={handleMove}
-              on:moveStart={handleMoveStart}
-              on:moveEnd={handleMoveEnd}
+              move={handleMove}
+              moveStart={handleMoveStart}
+              moveEnd={handleMoveEnd}
             />
           {/each}
         </tr>

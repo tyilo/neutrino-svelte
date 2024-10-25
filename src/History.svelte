@@ -1,15 +1,13 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import type { Position, State } from "./game";
-
-  const dispatch = createEventDispatcher();
 
   interface Props {
     history: State[];
     historyIndex: number;
+    goto: (n: number) => void;
   }
 
-  let { history, historyIndex }: Props = $props();
+  let { history, historyIndex, goto }: Props = $props();
 
   function positionString(position: Position): string {
     return (
@@ -37,10 +35,6 @@
     }
     return moveRows;
   });
-
-  function goto(index: number): void {
-    dispatch("goto", index + 1);
-  }
 </script>
 
 <table>
@@ -60,7 +54,7 @@
         {#each moveRow as move}
           <td
             class:selected={move[0] === historyIndex - 1}
-            onclick={() => goto(move[0])}>{moveString(move[1], move[2])}</td
+            onclick={() => goto(move[0] + 1)}>{moveString(move[1], move[2])}</td
           >
         {/each}
       </tr>

@@ -137,10 +137,6 @@
     handleNewState();
   }
 
-  function handleGotoHistory(e: CustomEvent): void {
-    gotoHistory(e.detail);
-  }
-
   let initialized = false;
 
   $effect(() => {
@@ -184,7 +180,7 @@
         {isHuman}
         {showValuations}
         bind:gameState
-        on:move={handleHumanMove}
+        move={handleHumanMove}
       />
       <div
         class="player"
@@ -248,7 +244,7 @@
     </div>
     <br />
     <br />
-    <History {history} {historyIndex} on:goto={handleGotoHistory} />
+    <History {history} {historyIndex} goto={gotoHistory} />
   </div>
 </main>
 
