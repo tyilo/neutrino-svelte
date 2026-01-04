@@ -50,7 +50,7 @@ const moveRows: [number, State, State][][] = $derived.by(() => {
   <tbody>
     {#each moveRows as moveRow, i}
       <tr>
-        <td>{i + 1}.</td>
+        <th>{i + 1}.</th>
         {#each moveRow as move}
           <td
             class:selected={move[0] === historyIndex - 1}
