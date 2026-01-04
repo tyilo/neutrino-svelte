@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { BotType } from "./bots";
+import { BotType } from "./bots";
 
-  interface Props {
-    botType: BotType;
-  }
+interface Props {
+	botType: BotType;
+}
 
-  let { botType = $bindable() }: Props = $props();
+let { botType = $bindable() }: Props = $props();
 </script>
 
 <label>

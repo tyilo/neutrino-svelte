@@ -1,40 +1,40 @@
 <script lang="ts">
-  import type { Position, State } from "./game";
+import type { Position, State } from "./game";
 
-  interface Props {
-    history: State[];
-    historyIndex: number;
-    goto: (n: number) => void;
-  }
+interface Props {
+	history: State[];
+	historyIndex: number;
+	goto: (n: number) => void;
+}
 
-  let { history, historyIndex, goto }: Props = $props();
+const { history, historyIndex, goto }: Props = $props();
 
-  function positionString(position: Position): string {
-    return (
-      String.fromCharCode("a".charCodeAt(0) + position[0]) + (5 - position[1])
-    );
-  }
+function positionString(position: Position): string {
+	return (
+		String.fromCharCode("a".charCodeAt(0) + position[0]) + (5 - position[1])
+	);
+}
 
-  function moveString(from: State, to: State): string {
-    const move = from.moveTo(to);
-    if (!from.movedNeutrino) {
-      return positionString(move[1]);
-    }
+function moveString(from: State, to: State): string {
+	const move = from.moveTo(to);
+	if (!from.movedNeutrino) {
+		return positionString(move[1]);
+	}
 
-    return positionString(move[0]) + positionString(move[1]);
-  }
+	return positionString(move[0]) + positionString(move[1]);
+}
 
-  const moveRows: [number, State, State][][] = $derived.by(() => {
-    const moveRows: [number, State, State][][] = [];
-    for (let i = 0; i < history.length - 1; i++) {
-      const rowIndex = Math.floor(i / 4);
-      if (rowIndex >= moveRows.length) {
-        moveRows.push([]);
-      }
-      moveRows[rowIndex].push([i, history[i], history[i + 1]]);
-    }
-    return moveRows;
-  });
+const moveRows: [number, State, State][][] = $derived.by(() => {
+	const moveRows: [number, State, State][][] = [];
+	for (let i = 0; i < history.length - 1; i++) {
+		const rowIndex = Math.floor(i / 4);
+		if (rowIndex >= moveRows.length) {
+			moveRows.push([]);
+		}
+		moveRows[rowIndex].push([i, history[i], history[i + 1]]);
+	}
+	return moveRows;
+});
 </script>
 
 <table>

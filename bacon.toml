@@ -1,0 +1,10 @@
+default_job = "biome"
+
+[jobs.biome]
+env.RAYON_NUM_THREADS = "1" # for reproducible order
+command = [
+    "pnpx", "@biomejs/biome", "lint", "--colors", "force",
+]
+need_stdout = true
+analyzer = "biome"
+watch = ["."]

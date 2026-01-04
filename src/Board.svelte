@@ -1,75 +1,78 @@
 <script lang="ts">
-  import type { State, Player, Position } from "./game";
-  import { Valuation, getValuationForMove } from "./valuation";
-  import Cell from "./Cell.svelte";
+import Cell from "./Cell.svelte";
+import type { Player, Position, State } from "./game";
+import { getValuationForMove, type Valuation } from "./valuation";
 
-  interface Props {
-    isHuman: [boolean, boolean];
-    gameState: State;
-    showValuations: boolean;
-    move: () => void;
-  }
+interface Props {
+	isHuman: [boolean, boolean];
+	gameState: State;
+	showValuations: boolean;
+	move: () => void;
+}
 
-  let { isHuman, gameState = $bindable(), showValuations, move }: Props = $props();
+let {
+	isHuman,
+	gameState = $bindable(),
+	showValuations,
+	move,
+}: Props = $props();
 
-  let winner: Player | undefined = $derived(gameState.getWinner());
+const winner: Player | undefined = $derived(gameState.getWinner());
 
-  function canMoveFrom(state: State, [x, y]: Position): boolean {
-    return winner === undefined && state.getPieceToMove() === state.cells[y][x];
-  }
+function canMoveFrom(state: State, [x, y]: Position): boolean {
+	return winner === undefined && state.getPieceToMove() === state.cells[y][x];
+}
 
-  async function getTargetValuation(
-    state: State
-  ): Promise<Valuation | undefined> {
-    if (!showValuations) {
-      return undefined;
-    }
-    return await getValuationForMove(state);
-  }
+async function getTargetValuation(
+	state: State,
+): Promise<Valuation | undefined> {
+	if (!showValuations) {
+		return undefined;
+	}
+	return await getValuationForMove(state);
+}
 
-  function emptyMoveTo(): boolean[][] {
-    return Array(5)
-      .fill(undefined)
-      .map(() => Array(5).fill(false));
-  }
+function emptyMoveTo(): boolean[][] {
+	return Array(5)
+		.fill(undefined)
+		.map(() => Array(5).fill(false));
+}
 
-  function emptyTargetValuation(): Promise<Valuation | undefined>[][] {
-    return Array(5)
-      .fill(undefined)
-      .map(() => Array(5).fill(Promise.resolve(undefined)));
-  }
+function emptyTargetValuation(): Promise<Valuation | undefined>[][] {
+	return Array(5)
+		.fill(undefined)
+		.map(() => Array(5).fill(Promise.resolve(undefined)));
+}
 
-  let canMoveTo: boolean[][] = $state(emptyMoveTo());
-  let targetValuations: Promise<Valuation | undefined>[][] = $state(
-    emptyTargetValuation()
-  );
-  function resetCanMoveTo() {
-    canMoveTo = emptyMoveTo();
-    targetValuations = emptyTargetValuation();
-  }
+let canMoveTo: boolean[][] = $state(emptyMoveTo());
+let targetValuations: Promise<Valuation | undefined>[][] = $state(
+	emptyTargetValuation(),
+);
+function resetCanMoveTo() {
+	canMoveTo = emptyMoveTo();
+	targetValuations = emptyTargetValuation();
+}
 
-  function handleMoveStart(from: Position) {
-    resetCanMoveTo();
-    for (let [x, y] of gameState.getValidMovesFrom(from)) {
-      canMoveTo[y][x] = true;
-      targetValuations[y][x] = getTargetValuation(
-        gameState.move([from, [x, y]])
-      );
-    }
-  }
+function handleMoveStart(from: Position) {
+	resetCanMoveTo();
+	for (const [x, y] of gameState.getValidMovesFrom(from)) {
+		canMoveTo[y][x] = true;
+		targetValuations[y][x] = getTargetValuation(gameState.move([from, [x, y]]));
+	}
+}
 
-  function handleMove(from: Position, to: Position) {
-    if (canMoveTo[to[1]][to[0]]) {
-      gameState = gameState.move([from, to]);
-      move();
-    }
-  }
+function handleMove(from: Position, to: Position) {
+	if (canMoveTo[to[1]][to[0]]) {
+		gameState = gameState.move([from, to]);
+		move();
+	}
+}
 
-  function handleMoveEnd() {
-    resetCanMoveTo();
-  }
+function handleMoveEnd() {
+	resetCanMoveTo();
+}
 
-  const fives = [0, 1, 2, 3, 4];
+const fives = [0, 1, 2, 3, 4];
 </script>
 
 {#if gameState}
@@ -94,7 +97,7 @@
         </tr>
       {/each}
       <tr>
-        <th />
+        <th></th>
         {#each fives as x}
           <th>{String.fromCharCode("a".charCodeAt(0) + x)}</th>
         {/each}

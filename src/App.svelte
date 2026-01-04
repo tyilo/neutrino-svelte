@@ -1,170 +1,170 @@
 <script lang="ts">
-  import "./style.css";
+import "./style.css";
 
-  import PlayerSelect from "./PlayerSelect.svelte";
-  import Board from "./Board.svelte";
-  import { Player, State } from "./game";
-  import { getExternalInfo } from "./valuation";
-  import { BotType } from "./bots";
-  import History from "./History.svelte";
-  import { decodeStateList, encodeStateList } from "./encoding";
+import Board from "./Board.svelte";
+import { BotType } from "./bots";
+import { decodeStateList, encodeStateList } from "./encoding";
+import { Player, State } from "./game";
+import History from "./History.svelte";
+import PlayerSelect from "./PlayerSelect.svelte";
+import { getExternalInfo } from "./valuation";
 
-  let gameState = $state(new State());
-  let history = $state([new State()]);
-  let historyIndex = $state(0);
-  let winner: Player | undefined = $derived(gameState.getWinner());
+let gameState = $state(new State());
+let history = $state([new State()]);
+let historyIndex = $state(0);
+const winner: Player | undefined = $derived(gameState.getWinner());
 
-  let botTypes: [BotType, BotType] = $state([BotType.Human, BotType.Human]);
-  let isHuman = $derived([
-    botTypes[0] === BotType.Human,
-    botTypes[1] === BotType.Human,
-  ] as [boolean, boolean]);
+const BOT_TYPES: [BotType, BotType] = [BotType.Human, BotType.Human];
+const isHuman = $derived([
+	BOT_TYPES[0] === BotType.Human,
+	BOT_TYPES[1] === BotType.Human,
+] as [boolean, boolean]);
 
-  let botToMove = $derived(!isHuman[gameState.currentPlayer]);
-  let botMoving = $state(false);
-  let started = $state(false);
+const botToMove = $derived(!isHuman[gameState.currentPlayer]);
+let botMoving = $state(false);
+let started = $state(false);
 
-  let stopCount = 0;
-  function toggleStart(): void {
-    started = !started;
-    if (!started) {
-      stopCount++;
-      botMoving = false;
-    }
-  }
+let stopCount = 0;
+function toggleStart(): void {
+	started = !started;
+	if (!started) {
+		stopCount++;
+		botMoving = false;
+	}
+}
 
-  function reset(): void {
-    stopCount++;
-    botMoving = false;
-    started = false;
-    gameState = new State();
-    history = [gameState];
-    historyIndex = 0;
-    handleNewState();
-  }
+function reset(): void {
+	stopCount++;
+	botMoving = false;
+	started = false;
+	gameState = new State();
+	history = [gameState];
+	historyIndex = 0;
+	handleNewState();
+}
 
-  async function getExternalNextState(): Promise<State> {
-    const data = await getExternalInfo(gameState);
+async function getExternalNextState(): Promise<State> {
+	const data = await getExternalInfo(gameState);
 
-    if (data.optimal_move_id) {
-      return State.deserializeString(data.optimal_move_id);
-    } else {
-      throw new Error(`No optimal move found.`);
-    }
-  }
+	if (data.optimal_move_id) {
+		return State.deserializeString(data.optimal_move_id);
+	} else {
+		throw new Error(`No optimal move found.`);
+	}
+}
 
-  let showValuations = $state(false);
+let showValuations = $state(false);
 
-  function timeout(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+function timeout(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-  let minBotTime: number = $state(1000);
-  async function getBotNextState(): Promise<State> {
-    const startTime = Date.now();
+let minBotTime: number = $state(1000);
+async function getBotNextState(): Promise<State> {
+	const startTime = Date.now();
 
-    let botType = botTypes[gameState.currentPlayer];
-    let nextState;
-    if (botType === BotType.ExternalBot) {
-      nextState = await getExternalNextState();
-    } else {
-      throw new Error(`Unknown bot type: ${botType}`);
-    }
+	const botType = BOT_TYPES[gameState.currentPlayer];
+	let nextState: State;
+	if (botType === BotType.ExternalBot) {
+		nextState = await getExternalNextState();
+	} else {
+		throw new Error(`Unknown bot type: ${botType}`);
+	}
 
-    const endTime = Date.now();
-    const diff = endTime - startTime;
-    const delay = Math.max(0, minBotTime - diff);
-    await timeout(delay);
+	const endTime = Date.now();
+	const diff = endTime - startTime;
+	const delay = Math.max(0, minBotTime - diff);
+	await timeout(delay);
 
-    return nextState;
-  }
+	return nextState;
+}
 
-  async function botMove(): Promise<void> {
-    const startStopCount = stopCount;
-    botMoving = true;
+async function botMove(): Promise<void> {
+	const startStopCount = stopCount;
+	botMoving = true;
 
-    const nextState = await getBotNextState();
-    botMoving = false;
+	const nextState = await getBotNextState();
+	botMoving = false;
 
-    if (stopCount !== startStopCount) {
-      return;
-    }
+	if (stopCount !== startStopCount) {
+		return;
+	}
 
-    gameState = nextState;
-    handleMove();
-  }
+	gameState = nextState;
+	handleMove();
+}
 
-  let valuation: string | null | undefined = $state();
-  async function updateValuation(): Promise<void> {
-    valuation = undefined;
-    const info = await getExternalInfo(gameState);
-    if (info.optimal_winner === null) {
-      valuation = null;
-    } else {
-      valuation = info.optimal_winner.replace(/^./, (c) => c.toUpperCase());
-    }
-  }
-  updateValuation();
+let valuation: string | null | undefined = $state();
+async function updateValuation(): Promise<void> {
+	valuation = undefined;
+	const info = await getExternalInfo(gameState);
+	if (info.optimal_winner === null) {
+		valuation = null;
+	} else {
+		valuation = info.optimal_winner.replace(/^./, (c) => c.toUpperCase());
+	}
+}
+updateValuation();
 
-  function handleNewState(): void {
-    updateValuation();
-  }
+function handleNewState(): void {
+	updateValuation();
+}
 
-  function handleMove(): void {
-    historyIndex++;
-    history = history.slice(0, historyIndex);
-    history = [...history, gameState];
-    handleNewState();
-  }
+function handleMove(): void {
+	historyIndex++;
+	history = history.slice(0, historyIndex);
+	history = [...history, gameState];
+	handleNewState();
+}
 
-  function handleHumanMove(): void {
-    started = true;
-    handleMove();
-  }
+function handleHumanMove(): void {
+	started = true;
+	handleMove();
+}
 
-  function undo() {
-    gotoHistory(historyIndex - 1);
-  }
+function undo() {
+	gotoHistory(historyIndex - 1);
+}
 
-  function redo() {
-    gotoHistory(historyIndex + 1);
-  }
+function redo() {
+	gotoHistory(historyIndex + 1);
+}
 
-  function gotoHistory(newIndex: number): void {
-    started = false;
-    historyIndex = newIndex;
-    gameState = history[historyIndex];
-    handleNewState();
-  }
+function gotoHistory(newIndex: number): void {
+	started = false;
+	historyIndex = newIndex;
+	gameState = history[historyIndex];
+	handleNewState();
+}
 
-  let initialized = false;
+let initialized = false;
 
-  $effect(() => {
-    if (!initialized) {
-      try {
-        history = [
-          ...history,
-          ...decodeStateList(window.location.hash.substring(1)),
-        ];
-        historyIndex = history.length - 1;
-        gameState = history[historyIndex];
-      } catch (e) {
-        console.error(e);
-      }
-      initialized = true;
-    }
-    let url = "/";
-    if (history.length > 1) {
-      url += `#${encodeStateList(history.slice(1))}`;
-    }
-    window.history.replaceState(undefined, "", url);
-  });
+$effect(() => {
+	if (!initialized) {
+		try {
+			history = [
+				...history,
+				...decodeStateList(window.location.hash.substring(1)),
+			];
+			historyIndex = history.length - 1;
+			gameState = history[historyIndex];
+		} catch (e) {
+			console.error(e);
+		}
+		initialized = true;
+	}
+	let url = "/";
+	if (history.length > 1) {
+		url += `#${encodeStateList(history.slice(1))}`;
+	}
+	window.history.replaceState(undefined, "", url);
+});
 
-  $effect(() => {
-    if (started && !botMoving && botToMove && winner === undefined) {
-      botMove();
-    }
-  });
+$effect(() => {
+	if (started && !botMoving && botToMove && winner === undefined) {
+		botMove();
+	}
+});
 </script>
 
 <main>
@@ -174,7 +174,7 @@
         class="player"
         class:currentPlayer={gameState.currentPlayer === Player.Black}
       >
-        <PlayerSelect bind:botType={botTypes[1]} />
+        <PlayerSelect bind:botType={BOT_TYPES[1]} />
       </div>
       <Board
         {isHuman}
@@ -186,7 +186,7 @@
         class="player"
         class:currentPlayer={gameState.currentPlayer === Player.White}
       >
-        <PlayerSelect bind:botType={botTypes[0]} />
+        <PlayerSelect bind:botType={BOT_TYPES[0]} />
       </div>
       <div>
         Status:

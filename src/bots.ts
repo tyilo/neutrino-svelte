@@ -1,4 +1,4 @@
 export enum BotType {
-  Human,
-  ExternalBot,
+	Human,
+	ExternalBot,
 }

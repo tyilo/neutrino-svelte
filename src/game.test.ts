@@ -1,50 +1,50 @@
 import { expect, test } from "vitest";
-import { State, Player } from "./game";
+import { Player, State } from "./game";
 
 function testSerialize(s: State) {
-  let serialized = s.serializeBigInt();
-  let deserialized = State.deserializeBigInt(serialized);
-  let serialized2 = deserialized.serializeBigInt();
+	const serialized = s.serializeBigInt();
+	const deserialized = State.deserializeBigInt(serialized);
+	const serialized2 = deserialized.serializeBigInt();
 
-  expect(serialized).toBe(serialized2);
+	expect(serialized).toBe(serialized2);
 }
 
 const testState = State.fromArray(Player.Black, false, [
-  "B.BBB",
-  "NB...",
-  ".....",
-  "....W",
-  "WWWW.",
+	"B.BBB",
+	"NB...",
+	".....",
+	"....W",
+	"WWWW.",
 ]);
 
 test("Serialize", () => {
-  testSerialize(new State());
-  testSerialize(testState);
+	testSerialize(new State());
+	testSerialize(testState);
 });
 
 test("Representation", () => {
-  expect(new State().serializeBigInt()).toBe(BigInt("0x554000c000aa8"));
-  expect(testState.serializeBigInt()).toBe(BigInt("0x155000000ba8a"));
+	expect(new State().serializeBigInt()).toBe(BigInt("0x554000c000aa8"));
+	expect(testState.serializeBigInt()).toBe(BigInt("0x155000000ba8a"));
 });
 
 test("Valid moves", () => {
-  const EXPECTED_UNIQUE_STATES = [1, 8, 95, 197, 1950, 3701];
+	const EXPECTED_UNIQUE_STATES = [1, 8, 95, 197, 1950, 3701];
 
-  let set = new Set<bigint>();
-  set.add(new State().serializeBigInt());
+	let set = new Set<bigint>();
+	set.add(new State().serializeBigInt());
 
-  for (let expected of EXPECTED_UNIQUE_STATES) {
-    if (expected === 1) continue;
+	for (const expected of EXPECTED_UNIQUE_STATES) {
+		if (expected === 1) continue;
 
-    let newSet = new Set<bigint>();
-    for (let serialized of set) {
-      const s = State.deserializeBigInt(serialized);
-      for (let s2 of s.getValidNextStates()) {
-        newSet.add(s2.serializeBigInt());
-      }
-    }
+		const newSet = new Set<bigint>();
+		for (const serialized of set) {
+			const s = State.deserializeBigInt(serialized);
+			for (const s2 of s.getValidNextStates()) {
+				newSet.add(s2.serializeBigInt());
+			}
+		}
 
-    set = newSet;
-    expect(set.size).toBe(expected);
-  }
+		set = newSet;
+		expect(set.size).toBe(expected);
+	}
 });
