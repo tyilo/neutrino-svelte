@@ -14,10 +14,10 @@ let history = $state([new State()]);
 let historyIndex = $state(0);
 const winner: Player | undefined = $derived(gameState.getWinner());
 
-const BOT_TYPES: [BotType, BotType] = [BotType.Human, BotType.Human];
+let botTypes: [BotType, BotType] = $state([BotType.Human, BotType.Human]);
 const isHuman = $derived([
-	BOT_TYPES[0] === BotType.Human,
-	BOT_TYPES[1] === BotType.Human,
+	botTypes[0] === BotType.Human,
+	botTypes[1] === BotType.Human,
 ] as [boolean, boolean]);
 
 const botToMove = $derived(!isHuman[gameState.currentPlayer]);
@@ -63,7 +63,7 @@ let minBotTime: number = $state(1000);
 async function getBotNextState(): Promise<State> {
 	const startTime = Date.now();
 
-	const botType = BOT_TYPES[gameState.currentPlayer];
+	const botType = botTypes[gameState.currentPlayer];
 	let nextState: State;
 	if (botType === BotType.ExternalBot) {
 		nextState = await getExternalNextState();
@@ -174,7 +174,7 @@ $effect(() => {
         class="player"
         class:currentPlayer={gameState.currentPlayer === Player.Black}
       >
-        <PlayerSelect bind:botType={BOT_TYPES[1]} />
+        <PlayerSelect bind:botType={botTypes[1]} />
       </div>
       <Board
         {isHuman}
@@ -186,7 +186,7 @@ $effect(() => {
         class="player"
         class:currentPlayer={gameState.currentPlayer === Player.White}
       >
-        <PlayerSelect bind:botType={BOT_TYPES[0]} />
+        <PlayerSelect bind:botType={botTypes[0]} />
       </div>
       <div>
         Status:
