@@ -12,8 +12,7 @@ let { botType = $bindable() }: Props = $props();
   <input type="radio" bind:group={botType} value={BotType.Human} /> Human
 </label>
 <label>
-  <input type="radio" bind:group={botType} value={BotType.ExternalBot} /> External
-  Bot (Optimal)
+  <input type="radio" bind:group={botType} value={BotType.OptimalBot} /> Bot (Optimal)
 </label>
 
 <style>

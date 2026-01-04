@@ -65,7 +65,7 @@ async function getBotNextState(): Promise<State> {
 
 	const botType = botTypes[gameState.currentPlayer];
 	let nextState: State;
-	if (botType === BotType.ExternalBot) {
+	if (botType === BotType.OptimalBot) {
 		nextState = await getExternalNextState();
 	} else {
 		throw new Error(`Unknown bot type: ${botType}`);
