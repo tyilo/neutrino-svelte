@@ -40,6 +40,7 @@
     gameState = new State();
     history = [gameState];
     historyIndex = 0;
+    handleNewState();
   }
 
   async function getExternalNextState(): Promise<State> {
